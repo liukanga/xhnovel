@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ziqing.xhnovel.dao.UserDao">
+    <resultMap id="userDOMap" type="com.ziqing.xhnovel.bean.UserEntity">
+        <id column="aid" property="id" />
+        <result column="name" property="name"/>
+        <result column="password" property="password" />
+        <result column="status" property="status" />
+        <result column="novel_ids" property="novelIds" />
+        <result column="details" property="details"/>
+        <result column="duration" property="duration"/>
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified" />
+    </resultMap>
+
+    <select id="queryUserById" resultMap="userDOMap">
+        select * from user where aid=#{id}
+    </select>
+
+    <insert id="addUser" parameterType="com.ziqing.xhnovel.bean.UserEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into user(
+        name, password, status, novel_ids, details, duration, gmt_created, gmt_modified
+        ) values (
+        #{name}, #{password}, #{status}, #{novelIds}, #{details}, #{duration}, now(), now()
+        )
+    </insert>
+
+    <delete id="removeUser">
+        delete from user where aid=#{id}
+    </delete>
+
+    <select id="queryAllUser" resultMap="userDOMap">
+        select * from user
+    </select>
+
+    <select id="pageQueryAll" resultMap="userDOMap">
+        select * from user
+        <bind name="currentPage" value="pagination*pageSize"/>
+        limit #{currentPage},#{pageSize}
+    </select>
+
+    <select id="pageQuery" resultMap="userDOMap">
+        select * from user where
+        <if test="status!=null">
+            status=#{status} and
+        </if>
+        <if test="status==null">
+            status!=1 and
+        </if>
+        name is not null
+        <bind name="currentPage" value="pagination*pageSize"/>
+        limit #{currentPage},#{pageSize}
+    </select>
+
+    <update id="updateUser" parameterType="com.ziqing.xhnovel.bean.UserEntity">
+        update user
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="password!=null">
+                password=#{password},
+            </if>
+            <if test="novelIds!=null">
+                novel_ids=#{novelIds},
+            </if>
+            <if test="duration!=null">
+                duration=#{duration},
+            </if>
+            <if test="details!=null">
+                details=#{details},
+            </if>
+            gmt_modified=now()
+        </set>
+        where aid=#{id}
+    </update>
+
+    <select id="queryByName" resultMap="userDOMap">
+        select * from user where name=#{name} limit 1
+    </select>
+
+</mapper>

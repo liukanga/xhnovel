@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:unless="${currentUser.id} eq ${user.id}">他的主页</title>
+    <title th:if="${currentUser.id} eq ${user.id}">我的主页</title>
+    <script language="javascript" src="/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/css/homePage.css">
+</head>
+<body background="/images/login-bg.jpg">
+     <header>
+         <div>
+             <div class="cUser" onclick="switchTo(1)">用户管理</div>
+             <div class="downLine" th:if="${hNo} eq 1"></div>
+         </div>
+         <div>
+             <div class="cNovel" onclick="switchTo(2)">小说管理</div>
+             <div class="downLine" th:if="${hNo} eq 2"></div>
+         </div>
+         <div>
+             <div class="ccUser" th:text="|你好！${currentUser.name}|"></div>
+             <input type=hidden id="cUserId" th:value="${currentUser.id}" />
+             <div class="cDetails" onclick="switchTo(3)">个人信息</div>
+             <div class="signOut" onclick="switchTo(4)">退出</div>
+             <div class="downLine" th:if="${hNo} eq 3"></div>
+         </div>
+     </header>
+
+
+     <main>
+         <div class="ttl" th:text="|${user.name}的主页|"></div>
+         <div class="splitLine"></div>
+
+         <div class="info">
+             <div>
+                 <scan>昵称：</scan>
+                 <span th:text="${user.name}"></span>
+             </div>
+             <div>
+                 <span title="等级说明：&#13;青铜级（阅读或者写作时长<=1年）&#10;白银级（阅读或者写作时长1~3年）&#10;黄金级（阅读或者写作时长3~5年）&#10;铂金级（阅读或者写作时长5~8年）&#10;钻石级（阅读或者写作时长8~10年）&#10;大师级（阅读或者写作时长>=10年）">等级：</span>
+                 <span class="duration" th:if="${user.duration}<1">青铜级</span>
+                 <span class="duration" th:if="${user.duration}>=1 and ${user.duration}<3">白银级</span>
+                 <span class="duration" th:if="${user.duration}>=3 and ${user.duration}<5">黄金级</span>
+                 <span class="duration" th:if="${user.duration}>=5 and ${user.duration}<8">铂金级</span>
+                 <span class="duration" th:if="${user.duration}>=8 and ${user.duration}<10">钻石级</span>
+                 <span class="duration" th:if="${user.duration}>=10">大师级</span>
+                 <span th:if="${user.status} eq 2"> 作者</span>
+                 <span th:if="${user.status} eq 3"> 读者</span>
+             </div>
+             <div>
+                 <scan>简介：</scan>
+                 <span th:text="${user.details}"></span>
+             </div>
+         </div>
+         <ul th:each="novel:${novels}">
+             <img th:src="${novel.imgUrl}" />
+             <li th:text="${novel.nName}"></li>
+             <div th:text="${novel.details}"></div>
+         </ul>
+
+         <button th:if="${user.id} eq ${currentUser.id}">编辑个人信息</button>
+     </main>
+
+     <div>
+         <div class="ttl">留言区</div>
+         <div th:each="comment:${commentList}">
+             <div th:text="|${comment.commentator.name} 的留言：|"></div>
+             <div th:text="${comment.content}"></div>
+             <div th:text="${comment.gmtCreated}"></div>
+         </div>
+         <div th:unless="${currentUser.id} eq ${user.id}">
+             <input class="content" type="text"/>
+             <button>发布评论</button>
+         </div>
+     </div>
+
+     <script type="text/javascript" src="/js/homePage.js" ></script>
+</body>
+</html>

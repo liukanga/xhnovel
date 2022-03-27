@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${chapter.cName}"></title>
+    <script language="javascript" src="/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/css/readePage.css">
+</head>
+<body background="/images/login-bg.jpg">
+    <header>
+        <div><scan style="font-size: 30px;font-weight: 500;" th:text="${chapter.cName}"></scan></div>
+        <div>
+            <div class="auth"><scan style="color: saddlebrown">小说名：</scan>
+            <scan th:text="|《${novel.nName}》|"></scan>
+            </div>
+            <div>
+                <scan style="color: saddlebrown">作者：</scan>
+                <scan th:text="${author.name}"></scan>
+            </div>
+            <div class="pulTime">
+                <scan style="color: saddlebrown">上传时间：</scan>
+                <scan th:text="${chapter.gmtCreated}"></scan>
+            </div>
+        </div>
+    </header>
+    <input class="current" th:value="${currentUser.id}" style="display: none" />
+    <div class="conTxt">
+        <p th:text="${chapter.content}"></p>
+    </div>
+
+    <input type="hidden" id="id" th:value="${chapter.id}" />
+    <input type="hidden" id="nid" th:value="${chapter.nid}" />
+    <div class="btns">
+        <button id="preChapter">上一章</button>
+        <button id="nList">目录</button>
+        <button id="nextChapter">下一章</button>
+    </div>
+
+    <div id="box" class="box">
+        <div class="box-in"></div>
+    </div>
+
+    <script type="text/javascript" src="/js/readePage.js" ></script>
+</body>
+</html>

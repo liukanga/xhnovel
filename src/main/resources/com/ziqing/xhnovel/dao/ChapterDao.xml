@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ziqing.xhnovel.dao.ChapterDao">
+    <resultMap id="chapterDOMap" type="com.ziqing.xhnovel.bean.ChapterEntity">
+        <id column="cid" property="id" />
+        <result column="c_name" property="cName" />
+        <result column="content" property="content" />
+        <result column="nid" property="nid"/>
+        <result column="mark" property="mark"/>
+        <result column="word_num" property="wordNum"/>
+        <result column="gmt_created" property="gmtCreated" />
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <select id="queryChapterById" resultMap="chapterDOMap">
+        select * from chapter where cid=#{id}
+    </select>
+
+    <update id="updateChapter" parameterType="com.ziqing.xhnovel.bean.ChapterEntity">
+        update chapter
+         <set>
+             <if test="cName!=null">
+                 c_name=#{cName},
+             </if>
+             <if test="content!=null">
+                 content=#{content},
+             </if>
+             <if test="nid!=null">
+                 nid=#{nid},
+             </if>
+             <if test="mark!=null">
+                 mark=#{mark},
+             </if>
+             <if test="wordnum!=null">
+                 word_num=#{wordNum},
+             </if>
+
+             gmt_modified=now()
+         </set>
+         where cid=#{id}
+    </update>
+
+    <select id="queryAllCountByNid" parameterType="java.lang.Long" resultType="int">
+        select count(*) from chapter where nid=#{nid}
+    </select>
+
+    <insert id="addChapter" useGeneratedKeys="true" keyProperty="id">
+        insert into chapter(
+        c_name, content, nid, mark, word_num, gmt_created, gmt_modified
+        ) values(
+        #{cName}, #{content}, #{nid}, #{mark}, #{wordNum}, #{gmtCreated}, now()
+        )
+    </insert>
+
+    <select id="queryAllChapters" resultMap="chapterDOMap">
+        select * from chapter
+    </select>
+
+    <select id="pageQuery" parameterType="com.ziqing.xhnovel.model.BasePageParam" resultMap="chapterDOMap">
+        select * from chapter where nid=#{pid} order by cid asc
+        <bind name="currentIndex" value="pagination*pageSize"/>
+        limit #{currentIndex}, #{pageSize}
+    </select>
+
+    <select id="queryByNid" parameterType="java.lang.Long" resultMap="chapterDOMap">
+        select * from chapter where nid=#{nid}
+    </select>
+
+    <select id="queryByName" parameterType="java.lang.String" resultMap="chapterDOMap">
+        select * from chapter where c_name=#{cName}
+    </select>
+
+
+
+</mapper>

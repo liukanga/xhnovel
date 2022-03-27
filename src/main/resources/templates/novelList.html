@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <script language="javascript" src="/js/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" href="/css/novelList.css">
+</head>
+<body background="/images/login-bg.jpg">
+    <header>
+        <div>
+            <div class="cUser" onclick="switchTo(1)">用户管理</div>
+            <div class="downLine" th:if="${hNo} eq 1"></div>
+        </div>
+        <div>
+            <div class="cNovel" onclick="switchTo(2)">小说管理</div>
+            <div class="downLine" th:if="${hNo} eq 2"></div>
+        </div>
+        <div>
+            <div class="ccUser" th:text="|你好！${currentUser.name}|"></div>
+            <input type=hidden id="cUserId" th:value="${currentUser.id}" />
+            <div class="cDetails" onclick="switchTo(3)">个人信息</div>
+            <div class="signOut" onclick="switchTo(4)">退出</div>
+            <div class="downLine" th:if="${hNo} eq 3"></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="ttl" th:text="${title}"></div>
+        <div class="splitLine"></div>
+        <ul class="uli" th:each="novel:${novelList}">
+            <img th:src="${novel.imgUrl}" />
+            <li th:text="|${novel.nName}|" th:value="${novel.id}" onclick="toReadChapter(this.value)"></li>
+            <div class="details" th:text="|简介：${novel.details}|"></div>
+        </ul>
+    </main>
+
+
+    <script type="text/javascript" src="/js/novelList.js" ></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+body{
+    font-family: "华文楷体";
+}
+header{
+    width: 500px;
+    height: 30px;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+}
+header>div:hover{
+    background-color: rgba(139,69,19,0.5);
+}
+.downLine{
+    height: 1px;
+    border: 1px solid sandybrown;
+    background-color: sandybrown;
+}
+.cDetails{
+    margin-top: 10px;
+    display: none;
+}
+.cDetails:hover{
+    cursor: pointer;
+}
+.signOut{
+    margin-top: 10px;
+    display: none;
+}
+.signOut:hover{
+    cursor: pointer;
+}
+.cNovel:hover{
+    cursor: pointer;
+}
+.cUser:hover{
+    cursor: pointer;
+}
+.ccUser:hover{
+    cursor: pointer;
+}
+.ttl{
+    width: 500px;
+    margin: 0 auto;
+    font-size: 28px;
+    font-weight: 800;
+    padding-bottom: 20px;
+    text-align: center;
+}
+.splitLine{
+    margin-bottom: 10px;
+    height: 3px;
+    background-color: sandybrown;
+}
+main{
+    width: 800px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+.uli{
+    list-style: none;
+    border: 2px solid black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.uli>li{
+    list-style: none;
+}
+.uli>img{
+    width: 100px;
+    height: 125px;
+}
+.details{
+    width:100%;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:5;
+    overflow:hidden;
+}

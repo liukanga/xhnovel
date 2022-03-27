@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ziqing.xhnovel.dao.NovelDao">
+    <resultMap id="novelDOMap" type="com.ziqing.xhnovel.bean.NovelEntity">
+        <id  column="nid" property="id"/>
+        <result  column="n_name" property="nName"/>
+        <result column="img_url" property="imgUrl"/>
+        <result column="chapter_ids" property="chapterIds"/>
+        <result column="details" property="details"/>
+        <result column="key_words" property="keyWords"/>
+        <result column="status" property="status"/>
+        <result column="aid" property="aid"/>
+        <result column="score" property="score"/>
+        <result column="gmt_created" property="gmtCreated"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <select id="queryAllBooks" resultMap="novelDOMap">
+        select * from novel
+    </select>
+
+    <select id="queryNovelById" resultMap="novelDOMap">
+        select * from novel where nid=#{id} limit 1
+    </select>
+
+    <select id="queryBookByName" resultMap="novelDOMap">
+        select * from novel where n_name=#{nName}
+    </select>
+
+    <insert id="addNovel" parameterType="com.ziqing.xhnovel.bean.NovelEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into novel (
+        n_name, img_url, chapter_ids, details, key_words, status, aid, score, gmt_created, gmt_modified
+        ) values (
+        #{nName}, #{imgUrl}, #{chapterIds}, #{details}, #{keyWords}, #{status}, #{aid}, #{score}, now(), now()
+        )
+    </insert>
+
+    <delete id="removeNovel">
+        delete from novel where nid=#{id}
+    </delete>
+
+    <update id="updateNovel">
+        update novel
+        <set>
+            <if test="nName!=null">
+                n_name=#{nName},
+            </if>
+            <if test="imgUrl!=null">
+                img_url=#{imgUrl},
+            </if>
+            <if test="chapterIds!=null">
+                chapter_ids=#{chapterIds},
+            </if>
+            <if test="details!=null">
+                details=#{details},
+            </if>
+            <if test="keyWords!=null">
+                key_words=#{keyWords},
+            </if>
+            <if test="status">
+                status=#{status},
+            </if>
+            <if test="aid">
+                aid=#{aid},
+            </if>
+            <if test="score!=null">
+                score=#{score},
+            </if>
+            gmt_modified=now()
+        </set>
+        where nid=#{id}
+    </update>
+
+
+</mapper>
