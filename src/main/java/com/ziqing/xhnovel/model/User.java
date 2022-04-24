@@ -20,6 +20,10 @@ public class User extends Base {
      */
     private int status;
     /**
+     * 头像文件
+     */
+    private String imageUrl;
+    /**
      * 小说集合、我的作品、我的书架
      */
     private List<Novel> novels;

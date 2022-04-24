@@ -8,11 +8,11 @@ public class Comment extends Base {
     /**
      * 评论者
      */
-    private User commentator;
+    private Long commentatorId;
     /**
      * 作者
      */
-    private User user;
+    private Long userId;
     /**
      * 评论内容
      */

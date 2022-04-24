@@ -73,5 +73,12 @@
         where nid=#{id}
     </update>
 
+    <select id="pageQueryAll" resultMap="novelDOMap">
+        select * from novel
+        <bind name="currentPage" value="pagination*pageSize"/>
+        limit #{currentPage},#{pageSize}
+    </select>
+
+
 
 </mapper>

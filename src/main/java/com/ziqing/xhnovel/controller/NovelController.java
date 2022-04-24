@@ -4,6 +4,7 @@ import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.ChapterService;
 import com.ziqing.xhnovel.service.NovelService;
 import com.ziqing.xhnovel.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +13,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @RequestMapping("/novel")
 @Controller
 public class NovelController {
@@ -74,15 +73,25 @@ public class NovelController {
     }
 
     @GetMapping("/query/allBooks")
-    public String queryAllBooks(HttpServletRequest request, Model model){
+    public String queryAllBooks(@RequestParam(value = "pageNo", required = false, defaultValue = "1")int pageNo,
+                                @RequestParam(value = "pageSize", required = false, defaultValue = "8")int pageSize,
+                                HttpServletRequest request,
+                                Model model){
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        User currentUser = (User)session.getAttribute("user");
+        log.info("登录用户为：{}", currentUser.getName());
+        log.info("当前用户id：{}", currentUser.getId());
 
-        List<Novel> novelList = novelService.queryAllBooks();
-        model.addAttribute("title", "小说列表");
-        model.addAttribute("novelList",novelList);
+        BasePageParam param = new BasePageParam(pageNo-1, pageSize, null, null);
+        Paging<Novel> novelPaging = novelService.pageQueryAll(param);
+        List<Novel> novelList = novelPaging.getData();
+
+        model.addAttribute("novelList", novelList);
+        model.addAttribute("pageObj",novelPaging);
+        model.addAttribute("pageNo",pageNo);
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("hNo", 2);
+        model.addAttribute("hNo", currentUser.getStatus());
+        model.addAttribute("title", "小说列表");
 
         return "novelList";
 
@@ -103,18 +112,31 @@ public class NovelController {
         Novel novel = novelService.queryNovelById(nid);
 
         User author = userService.queryUserById(novel.getAid());
+        Chapter nextChapter = chapterService.queryChapter(cid);
 
-        System.out.println(author.getName()+"\n"+chapter.getCName());
+        if (!chapter.getNid().equals(nextChapter.getNid())){
+            return "redirect: /novel/toChapterList?nid="+nextChapter.getNid();
+        }
 
         if(next){
-            Chapter nextChapter = chapterService.queryChapter(cid);
             model.addAttribute("chapter", nextChapter);
         }else{
             model.addAttribute("chapter", chapter);
         }
         model.addAttribute("novel", novel);
         model.addAttribute("author", author);
-        model.addAttribute("currentUser", currentUser);
+
+        boolean isLogin = true;
+        if (Objects.isNull(currentUser)){
+            User defaultUser = new User();
+            defaultUser.setName("未登录！");
+            isLogin = false;
+            model.addAttribute("currentUser", defaultUser);
+        }else{
+            model.addAttribute("currentUser", currentUser);
+        }
+
+        model.addAttribute("isLogin", isLogin);
 
         return "readePage";
     }
@@ -157,7 +179,7 @@ public class NovelController {
     public String novelList(@PathVariable("aid") Long aid, Model model){
 
         User user = userService.queryUserById(aid);
-        model.addAttribute("user", user);
+        model.addAttribute("currentUser", user);
         model.addAttribute("novels", user.getNovels());
         int status = user.getStatus();
         if(status==1){
@@ -202,7 +224,7 @@ public class NovelController {
         result.setSuccess(true);
 
         if(i==0){
-            result.setCode("605");
+            result.setCode(605);
             result.setMessage("更新用户信息失败");
             result.setSuccess(false);
         }

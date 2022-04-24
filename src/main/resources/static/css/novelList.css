@@ -78,3 +78,34 @@ main{
     -webkit-line-clamp:5;
     overflow:hidden;
 }
+.num{
+    width: 900px;
+    height: 35px;
+    margin-top: 25px;
+    margin-left: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid black;
+}
+.current{
+    margin-left: 20px;
+}
+
+.paging-area>a{
+    font-size: 16px;
+    text-decoration-line: none;
+    color: saddlebrown;
+}
+.paging-area>a:hover{
+    cursor: pointer;
+    color: sandybrown;
+}
+.paging-area>div{
+    display: inline-block;
+    font-size: 16px;
+    color: black;
+}
+.paging-area>div:hover{
+    cursor: pointer;
+}

@@ -80,7 +80,7 @@ p{
     width: 40px;
     color:peru;
     font-weight:bold;
-
+    cursor: pointer;
 }
 .box-in{
     visibility: visible;

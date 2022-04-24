@@ -49,8 +49,8 @@ public class CommentServiceImpl implements CommentService {
         if (commentEntity.getId()!=null){
             comment.setId(commentEntity.getId());
         }
-        comment.setUser(userService.queryUserById(commentEntity.getUserId()));
-        comment.setCommentator(userService.queryUserById(commentEntity.getCommentatorId()));
+        comment.setUserId(commentEntity.getUserId());
+        comment.setCommentatorId(commentEntity.getCommentatorId());
         comment.setContent(commentEntity.getContent());
         comment.setGmtCreated(commentEntity.getGmtCreated());
         comment.setGmtModified(commentEntity.getGmtModified());
@@ -63,8 +63,8 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getId()!=null){
             commentEntity.setId(commentEntity.getId());
         }
-        commentEntity.setUserId(comment.getUser().getId());
-        commentEntity.setCommentatorId(comment.getCommentator().getId());
+        commentEntity.setUserId(comment.getUserId());
+        commentEntity.setCommentatorId(comment.getCommentatorId());
         commentEntity.setContent(comment.getContent());
         commentEntity.setGmtCreated(comment.getGmtCreated());
         commentEntity.setGmtModified(comment.getGmtModified());

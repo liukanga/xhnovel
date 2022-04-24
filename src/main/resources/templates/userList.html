@@ -10,24 +10,28 @@
 
     <header>
         <div>
-            <div class="cUser" onclick="switchTo(1)">用户管理</div>
-            <div class="downLine" th:if="${hNo} eq 1"></div>
+            <div class="cUser" th:if="${hNo} eq 1" onclick="switchTo(1)">用户管理</div>
+            <div class="downLine"></div>
         </div>
         <div>
-            <div class="cNovel" onclick="switchTo(2)">小说管理</div>
-            <div class="downLine" th:if="${hNo} eq 2"></div>
+            <div class="cNovel" th:if="${hNo} eq 1" onclick="switchTo(2)">小说管理</div>
+            <div class="cNovel" th:unless="${hNo} eq 1" onclick="switchTo(2)">小说列表</div>
+            <div class="downLine"></div>
         </div>
         <div>
-            <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
+            <div style="display: flex">
+                <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
+                <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
+            </div>
             <input type=hidden id="cUserId" th:value="${currentUser.id}" />
             <div class="cDetails" onclick="switchTo(3)">个人信息</div>
             <div class="signOut" onclick="switchTo(4)">退出</div>
-            <div class="downLine" th:if="${hNo} eq 3"></div>
+            <div class="downLine"></div>
         </div>
     </header>
     <main>
-        <div class="ttl" th:if="${currentUser.status} eq 1">用户列表</div>
-        <div class="ttl" th:unless="${currentUser.status} eq 1">作者列表</div>
+        <div class="ttl" th:if="${hNo} eq 1">用户列表</div>
+        <div class="ttl" th:unless="${hNo} eq 1">作者列表</div>
         <div class="splitLine"></div>
         <div class="list">
             <div style="font-weight: 700">用户名</div>
@@ -47,7 +51,7 @@
             <div class="status" th:if="${user.status} eq 2">作者</div>
             <div class="status" th:if="${user.status} eq 3">读者</div>
             <div class="details" th:text="${user.details}"></div>
-            <div th:if="${currentUser.status} eq 1">
+            <div th:if="${hNo} eq 1">
                 <button>修改</button>
                 <button>删除</button>
             </div>
@@ -61,8 +65,9 @@
             <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
         </div>
         <div>
-            <button>上一页</button>
-            <button>下一页</button>
+            <input id="currentPNo" type="hidden" th:value="${pageNo}" />
+            <a th:if="${pageNo} > 1" th:href="'/user/toUserList?pageNo=' + ${pageNo-1}" style="text-decoration-line: none;color: saddlebrown">上一页</a>
+            <a th:unless="${pageNo} eq ${pageObj.totalPage}" th:href="'/user/toUserList?pageNo=' + ${pageNo+1}"  style="text-decoration-line: none;color: saddlebrown">下一页</a>
         </div>
         <div th:text="|当前在第 ${pageNo} 页|"></div>
     </div>

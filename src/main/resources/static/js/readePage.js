@@ -42,3 +42,8 @@ box.onclick = function(){
         }
     });
 }
+
+function toSwitch(){
+    var aid = document.getElementById("authorId").value;
+
+}

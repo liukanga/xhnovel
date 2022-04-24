@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>游客页面</title>
+</head>
+<body>
+
+<div id="ws" style="display:none;position: absolute;height: 100%;width: 100%;background: #333;opacity: 0.5;color: white;font-size: 35px;font-family: 华文楷体">
+    <h2 align="center">游客您好， <a th:href="@{/user/loginPage}" style="color: saddlebrown">请点击登录</a>阅读小说</h2>
+</div>
+
+<div>
+    <label>图片地址</label>
+    <div>
+        <input type='hidden' id='img_url' />
+        <input style="display: block" type='file' name="file" onchange='showImg()' id='img_file'/>
+        <img src='' alt='' id='img_id' style="width:100px;height:100px;border-radius: 50%">
+    </div>
+    <img src="file:///D:/image/2022/04/24/2006839cff2f4f4f80003c0f6116247f.png" style="width:100px;height:100px;border-radius: 50%">
+</div>
+
+<script type="text/javascript">
+
+    function showImg(){
+        var file = document.getElementById('img_file').files[0];
+        var re = new FileReader();
+        re.readAsDataURL(file);
+        re.onload = function(re){
+            alert("图片地址：" + JSON.stringify(file))
+            const formData = new FormData();
+            formData.append("file", file);
+            fetch("/image", {
+                method: "POST",
+                body: formData
+            })
+            .then(function (response) {
+                alert("response1: " + JSON.stringify(response))
+                return response.json();
+            })
+            .then(function (result){
+                alert("response2: " + JSON.stringify(result))
+                if(result.success === true || result.isSuccess===true){
+                    alert("上传头像成功");
+                }else{
+                    alert("上传头像失败，请重新上传");
+                    window.location = "http://localhost:8026/";
+                }
+            })
+            document.getElementById('img_id').src=re.target.result;
+        }
+    }
+
+</script>
+</body>
+</html>

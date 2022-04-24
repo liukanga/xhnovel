@@ -35,6 +35,11 @@
                 <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}" ></a>
                 <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
             </div>
+            <div>
+                <input id="currentPNo" type="hidden" th:value="${pageNo}" />
+                <a th:if="${pageNo} > 1" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo-1}" style="text-decoration-line: none;color: saddlebrown">上一页</a>
+                <a th:unless="${pageNo} eq ${pageObj.totalPage}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo+1}"  style="text-decoration-line: none;color: saddlebrown">下一页</a>
+            </div>
             <div class="current" th:text="|当前在第 ${pageNo} 页|"></div>
         </div>
     </div>

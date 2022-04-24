@@ -21,3 +21,39 @@ currentUser.addEventListener("click", function () {
     de.style.display = "none";
     signOut.style.display = "none";
 });
+
+function sendComment() {
+
+    const content = document.getElementById("commentContent").textContent;
+    const c1 = document.getElementById("commentator1").value;
+    const c2 = document.getElementById("commentator2").value;
+
+    var comment = {
+        "commentatorId": c1,
+        "userId": c2,
+        "content": content
+    }
+
+    fetch("/comment/addComment",
+        {
+            body: JSON.stringify(comment),
+            method: POST,
+            cache: 'no-cache',
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            if(result.isSuccess === true || result.success === true){
+                alert("评论成功！");
+            }else{
+                alert("评论失败，请重新尝试！");
+            }
+            window.location = "/user/toHomePage?uid="+c2;
+        })
+
+
+}

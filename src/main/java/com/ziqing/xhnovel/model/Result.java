@@ -10,13 +10,9 @@ public class Result<T> {
 
     private String message;
 
-    private String code;
+    private Integer code;
 
     private T data;
-
-    public static <T> Result<T> create(){
-        return new Result<T>();
-    }
 
     public boolean isSuccess(){
         return success;

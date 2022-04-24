@@ -8,6 +8,7 @@
         <result column="name" property="name"/>
         <result column="password" property="password" />
         <result column="status" property="status" />
+        <result column="image_url" property="imageUrl" />
         <result column="novel_ids" property="novelIds" />
         <result column="details" property="details"/>
         <result column="duration" property="duration"/>
@@ -21,9 +22,9 @@
 
     <insert id="addUser" parameterType="com.ziqing.xhnovel.bean.UserEntity" useGeneratedKeys="true" keyProperty="id">
         insert into user(
-        name, password, status, novel_ids, details, duration, gmt_created, gmt_modified
+        name, password, status, image_url, novel_ids, details, duration, gmt_created, gmt_modified
         ) values (
-        #{name}, #{password}, #{status}, #{novelIds}, #{details}, #{duration}, now(), now()
+        #{name}, #{password}, #{status}, #{imageUrl}, #{novelIds}, #{details}, #{duration}, now(), now()
         )
     </insert>
 
@@ -65,6 +66,9 @@
             </if>
             <if test="novelIds!=null">
                 novel_ids=#{novelIds},
+            </if>
+            <if test="imageUrl!=null">
+                image_url=#{imageUrl},
             </if>
             <if test="duration!=null">
                 duration=#{duration},

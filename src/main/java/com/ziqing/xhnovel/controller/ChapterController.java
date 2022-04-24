@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -90,8 +91,8 @@ public class ChapterController {
                     String subStr = text.substring(0, len - 48);
                     String mark = novel.getId()+""+index;
                     String ctime = textinfo.getElementsByTag("span").get(3).text().substring(7);
-                    DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    LocalDateTime gmt = LocalDateTime.parse(ctime, df);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date gmt = sdf.parse(ctime);
                     String num = textinfo.getElementsByTag("span").get(2).text().substring(3);
                     int wordNum = Integer.parseInt(num);
                     List<Chapter> list = chapterService.queryByCName(cName);
@@ -123,7 +124,7 @@ public class ChapterController {
             }
             novel.setChapters(chapters);
             novelService.updateNovel(novel);
-        }catch (IOException e){
+        }catch (Exception e){
             log.error("小说连接断开！",e);
         }
         log.info("填充完毕");

@@ -1,9 +1,8 @@
 package com.ziqing.xhnovel.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class Base {
@@ -14,12 +13,10 @@ public class Base {
     /**
      * 创建时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
-    private LocalDateTime gmtCreated;
+    private Date gmtCreated;
     /**
      * 修改时间
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "yyyy-MM-dd")
-    private LocalDateTime gmtModified;
+    private Date gmtModified;
 
 }

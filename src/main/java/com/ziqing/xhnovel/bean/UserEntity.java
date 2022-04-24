@@ -19,6 +19,10 @@ public class UserEntity extends Base {
      */
     private int status;
     /**
+     * 头像文件
+     */
+    private String imageUrl;
+    /**
      * 小说集合、我的作品、我的书架  JSON数据格式
      */
     private String novelIds;

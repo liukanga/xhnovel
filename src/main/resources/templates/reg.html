@@ -23,11 +23,12 @@
             <div class="intxt">密码：</div>
             <input type="password" id="password" placeholder="请输入密码"/>
         </div>
+        <input style="display: block" type='file' name="file" onchange='showImg()' id='img_file'/>
+        <img src='' alt='' id='img_id' style="width:100px;height:100px;border-radius: 50%">
         <div class="txtb">
             <div class="intxt">身份：</div>
             <select id="status">
                 <option value="0">请选择身份</option>
-                <option value="1">网站管理员</option>
                 <option value="2">作者</option>
                 <option value="3">读者</option>
             </select>

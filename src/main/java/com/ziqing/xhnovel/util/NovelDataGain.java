@@ -19,12 +19,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author 刘梓清
@@ -132,8 +130,8 @@ public class NovelDataGain {
                         String subStr = text.substring(0, len - 48);
                         String mark = novel.getId() + "" + index;
                         String ctime = textinfo.getElementsByTag("span").get(3).text().substring(7);
-                        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        LocalDateTime gmt = LocalDateTime.parse(ctime, df);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        Date gmt = sdf.parse(ctime);
                         String num = textinfo.getElementsByTag("span").get(2).text().substring(3);
                         int wordNum = Integer.parseInt(num);
 
@@ -176,7 +174,7 @@ public class NovelDataGain {
                 resUser.setNovels(novelList);
                 userService.updateUser(resUser);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("连接网站失败！", e);
         }
 

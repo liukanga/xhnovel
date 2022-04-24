@@ -47,14 +47,14 @@ public class UserServiceImpl implements UserService {
         Result<User> result = new Result<>();
 
         if(!userEntity.getPassword().equals(DigestUtils.md5Hex(password))){
-            result.setCode("601");
+            result.setCode(601);
             result.setMessage("密码错误");
             result.setSuccess(false);
             return result;
         }
 
         if(userEntity.getStatus()!=status){
-            result.setCode("605");
+            result.setCode(605);
             result.setMessage("身份验证错误");
             result.setSuccess(false);
             return result;
@@ -72,13 +72,13 @@ public class UserServiceImpl implements UserService {
         Result<User> result = new Result<>();
 
         if(user.getName().isEmpty()){
-            result.setCode("600");
+            result.setCode(600);
             result.setMessage("用户名不能为空");
             result.setSuccess(false);
             return result;
         }
         if(user.getPassword().isEmpty()){
-            result.setCode("601");
+            result.setCode(601);
             result.setMessage("密码不能为空");
             result.setSuccess(false);
             return result;
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
         user.setName(userEntity.getName());
         user.setPassword(userEntity.getPassword());
-        if(!StringUtils.isEmpty(userEntity.getDetails())){
+        if(StringUtils.hasText(userEntity.getDetails())){
             user.setDetails(userEntity.getDetails());
         }
         user.setStatus(userEntity.getStatus());
@@ -167,6 +167,10 @@ public class UserServiceImpl implements UserService {
             }
         }
         user.setNovels(novels);
+
+        if (StringUtils.hasText(userEntity.getImageUrl())){
+            user.setImageUrl(userEntity.getImageUrl());
+        }
 
         user.setGmtCreated(userEntity.getGmtCreated());
         user.setGmtModified(userEntity.getGmtModified());
@@ -187,7 +191,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setPassword(user.getPassword());
         userEntity.setStatus(user.getStatus());
         userEntity.setDuration(user.getDuration());
-        if(!StringUtils.isEmpty(user.getDetails())){
+        if(StringUtils.hasText(user.getDetails())){
             userEntity.setDetails(user.getDetails());
         }
 
@@ -200,6 +204,10 @@ public class UserServiceImpl implements UserService {
         }
         String novelIds = JSON.toJSONString(nIds);
         userEntity.setNovelIds(novelIds);
+
+        if (StringUtils.hasText(user.getImageUrl())){
+            userEntity.setImageUrl(user.getImageUrl());
+        }
 
         userEntity.setGmtCreated(user.getGmtCreated());
         userEntity.setGmtModified(user.getGmtModified());

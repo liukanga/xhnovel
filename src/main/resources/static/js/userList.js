@@ -22,3 +22,18 @@ currentUser.addEventListener("click", function () {
     de.style.display = "none";
     signOut.style.display = "none";
 });
+
+function nextUserPage() {
+
+    var pNo = document.getElementById("currentPNo").value;
+    alert("当前页数：" + pNo + 1)
+    window.location = "/user/toUserList?pageNo=" + (pNo + 1)
+
+}
+function preUserPage() {
+
+    const pNo = document.getElementById("currentPNo").value;
+    alert("当前页数：" + pNo)
+    window.location = "/user/toUserList?pageNo=" + (pNo-1)
+
+}

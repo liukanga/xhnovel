@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="/css/readePage.css">
 </head>
 <body background="/images/login-bg.jpg">
+    <div th:unless="${isLogin}" id="ws" style="position: absolute;height: 100%;width: 100%;background: #333;opacity: 0.5;color: white;font-size: 35px;font-family: 华文楷体">
+        <h2 align="center" style="margin-top: 200px">游客您好， <a th:href="@{/user/loginPage}" style="color: saddlebrown;text-decoration-line: none">请点击登录</a>阅读小说</h2>
+    </div>
     <header>
         <div><scan style="font-size: 30px;font-weight: 500;" th:text="${chapter.cName}"></scan></div>
         <div>
             <div class="auth"><scan style="color: saddlebrown">小说名：</scan>
-            <scan th:text="|《${novel.nName}》|"></scan>
+                <a th:text="${novel.nName}" th:href="'/novel/toChapterList?nid='+${novel.id}"></a>
             </div>
             <div>
+                <input type="hidden" th:value="${author.id}" />
                 <scan style="color: saddlebrown">作者：</scan>
-                <scan th:text="${author.name}"></scan>
+                <a th:text="${author.name}" th:href="'/user/toHomePage?uid='+${author.id}"></a>
             </div>
             <div class="pulTime">
                 <scan style="color: saddlebrown">上传时间：</scan>
@@ -30,7 +34,7 @@
 
     <input type="hidden" id="id" th:value="${chapter.id}" />
     <input type="hidden" id="nid" th:value="${chapter.nid}" />
-    <div class="btns">
+    <div th:if="${isLogin}" class="btns">
         <button id="preChapter">上一章</button>
         <button id="nList">目录</button>
         <button id="nextChapter">下一章</button>

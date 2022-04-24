@@ -1,4 +1,5 @@
 package com.ziqing.xhnovel.controller;
+import com.ziqing.xhnovel.bean.ImageEntity;
 import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.CommentService;
 import com.ziqing.xhnovel.service.NovelService;
@@ -51,8 +52,12 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseBody
-    public Result<User> register(@RequestBody User user){
+    public Result<User> register(@RequestBody User user, HttpServletRequest request){
 
+        HttpSession session = request.getSession();
+        ImageEntity imageEntity = (ImageEntity) session.getAttribute("imageEntity");
+
+        user.setImageUrl(imageEntity.getUrlPath());
         Result<User> res = userService.register(user);
 
         if (res.isSuccess()){
@@ -88,7 +93,7 @@ public class UserController {
         model.addAttribute("pageObj",userPaging);
         model.addAttribute("pageNo",pageNo);
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("hNo", 1);
+        model.addAttribute("hNo", currentUser.getStatus());
 
         return "userList";
     }
@@ -105,7 +110,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("novels", user.getNovels());
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("hNo", 3);
+        model.addAttribute("hNo", currentUser.getStatus());
         model.addAttribute("commentList", commentList);
 
         return "homePage";
