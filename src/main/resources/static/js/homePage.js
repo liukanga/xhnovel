@@ -2,8 +2,14 @@ function switchTo(value) {
     if(value===1){
         window.location = "/user/toUserList";
     }else if(value===2){
-        window.location = "/novel/query/allBooks";
+        window.location = "/user/toUserList?status="+2;
     }else if(value===3){
+        window.location = "/novel/query";
+    }else if(value===4){
+        window.location = "/novel/query";
+    }else if(value===5){
+        window.location = "/comment/toCommentList";
+    }else if(value===6){
         var uid = document.getElementById("cUserId").value;
         window.location = "/user/toHomePage?uid="+uid;
     }else{
@@ -24,20 +30,24 @@ currentUser.addEventListener("click", function () {
 
 function sendComment() {
 
-    const content = document.getElementById("commentContent").textContent;
+    const content = document.getElementById("commentContent").value;
     const c1 = document.getElementById("commentator1").value;
     const c2 = document.getElementById("commentator2").value;
 
     var comment = {
-        "commentatorId": c1,
-        "userId": c2,
+        "commentator": {
+            "id": c1
+        },
+        "user": {
+            "id": c2
+        },
         "content": content
     }
 
     fetch("/comment/addComment",
         {
             body: JSON.stringify(comment),
-            method: POST,
+            method: 'POST',
             cache: 'no-cache',
             headers: {
                 'content-type': 'application/json'

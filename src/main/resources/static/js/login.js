@@ -43,7 +43,7 @@ login_btn.addEventListener("click", function () {
                 if(status==='1'){
                     window.location = "/user/toUserList";
                 }else{
-                    window.location = "/novel/toNovelList/"+aid;
+                    window.location = "/novel/query";
                 }
             }else{
                 alert("登录失败,请重新登录！");

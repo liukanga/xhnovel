@@ -8,13 +8,28 @@
 </head>
 <body background="/images/login-bg.jpg">
     <header>
-        <div>
-            <div class="cUser" th:if="${hNo} eq 1" onclick="switchTo(1)">用户管理</div>
+        <div th:if="${hNo} eq 1">
+            <div class="cUser" onclick="switchTo(1)">用户管理</div>
+            <div class="downLine"></div>
+        </div>
+        <div th:unless="${hNo} eq 1">
+            <div class="cNovel" onclick="switchTo(2)">作者列表</div>
+            <div class="downLine"></div>
+        </div>
+        <div th:if="${hNo} eq 1">
+            <div class="cNovel" onclick="switchTo(3)">小说管理</div>
+            <div class="downLine"></div>
+        </div>
+        <div th:unless="${hNo} eq 1">
+            <div class="cNovel" onclick="switchTo(4)">小说列表</div>
+            <div class="downLine"></div>
+        </div>
+        <div th:if="${hNo} eq 1" >
+            <div class="cNovel" onclick="switchTo(5)">评论管理</div>
             <div class="downLine"></div>
         </div>
         <div>
-            <div class="cNovel" th:if="${hNo} eq 1" onclick="switchTo(2)">小说管理</div>
-            <div class="cNovel" th:unless="${hNo} eq 1" onclick="switchTo(2)">小说列表</div>
+            <div class="cNovel" onclick="switchTo(6)">我的主页</div>
             <div class="downLine"></div>
         </div>
         <div>
@@ -32,6 +47,16 @@
     <main>
         <div class="ttl" th:text="${title}"></div>
         <div class="splitLine"></div>
+        <div th:if="${page} eq 2" style="display: flex">
+            <input type="text" id="keyWords" placeholder="请输入小说名或作者名" />
+            <select id="status">
+                <option value="0">所有</option>
+                <option value="2">完结</option>
+                <option value="3">连载</option>
+            </select>
+            <button onclick="queryNovel()">查询</button>
+        </div>
+
         <ul class="uli" th:each="novel:${novelList}">
             <img th:src="${novel.imgUrl}" />
             <li th:text="|${novel.nName}|" th:value="${novel.id}" onclick="toReadChapter(this.value)"></li>
@@ -39,15 +64,15 @@
         </ul>
     </main>
 
-    <div class="num">
+    <div class="num" th:if="${page} eq 2">
         <div th:each="i:${#numbers.sequence(1, pageObj.totalPage)}" class="paging-area">
-            <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel//query/allBooks?pageNo=' + ${i}" th:text="${i}" ></a>
+            <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/query?pageNo=' + ${i}" th:text="${i}" ></a>
             <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
         </div>
         <div>
             <input id="currentPNo" type="hidden" th:value="${pageNo}" />
-            <a th:if="${pageNo} > 1" th:href="'/novel//query/allBooks?pageNo=' + ${pageNo-1}" style="text-decoration-line: none;color: saddlebrown">上一页</a>
-            <a th:unless="${pageNo} eq ${pageObj.totalPage}" th:href="'/novel//query/allBooks?pageNo=' + ${pageNo+1}"  style="text-decoration-line: none;color: saddlebrown">下一页</a>
+            <a th:if="${pageNo} > 1" th:href="'/novel/query?pageNo=' + ${pageNo-1}" style="text-decoration-line: none;color: saddlebrown">上一页</a>
+            <a th:unless="${pageNo} eq ${pageObj.totalPage}" th:href="'/novel/query?pageNo=' + ${pageNo+1}"  style="text-decoration-line: none;color: saddlebrown">下一页</a>
         </div>
         <div th:text="|当前在第 ${pageNo} 页|"></div>
     </div>

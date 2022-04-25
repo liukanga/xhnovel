@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ziqing.xhnovel.dao.CommentDao">
-    <resultMap id="CommentDOMap" type="com.ziqing.xhnovel.bean.CommentEntity">
+    <resultMap id="commentDOMap" type="com.ziqing.xhnovel.bean.CommentEntity">
         <id  column="id" property="id"/>
         <result  column="commentator_id" property="commentatorId"/>
         <result column="user_id" property="userId"/>
@@ -17,12 +17,39 @@
             commentator_id, user_id, content, gmt_created, gmt_modified
         )
         values (
-            #{commentator}, #{userId}, #{content}, now(), now()
+            #{commentatorId}, #{userId}, #{content}, now(), now()
         )
     </insert>
 
-    <select id="loadCommentsByUserId" resultMap="CommentDOMap">
+    <select id="loadCommentsByUserId" resultMap="commentDOMap">
         select id, commentator_id, user_id, content, gmt_created, gmt_modified from comment where user_id=#{userId}
+    </select>
+
+
+    <select id="pageQueryAll" resultType="java.lang.Integer">
+        select count(*) from comment
+        <where>
+            <if test="userId!=null">
+                user_id = #{userId}
+            </if>
+            <if test="commentatorId!=null">
+                commentator_id = #{commentatorId}
+            </if>
+        </where>
+    </select>
+
+    <select id="pageQuery" resultMap="commentDOMap">
+        select * from comment
+        <where>
+            <if test="userId!=null">
+                user_id = #{userId}
+            </if>
+            <if test="commentatorId!=null">
+                commentator_id = #{commentatorId}
+            </if>
+        </where>
+        <bind name="currentPage" value="pagination*pageSize"/>
+        limit #{currentPage},#{pageSize}
     </select>
 
 

@@ -7,66 +7,100 @@
     <link rel="stylesheet" href="/css/chapterList.css">
 </head>
 <body background="/images/login-bg.jpg">
-    <div class="chaMain">
-        <header>
-            <div><img th:src="${novel.imgUrl}"></div>
-            <div>小说名：<scan th:text="${novel.nName}"></scan></div>
-            <div>作者：<a th:text="${user.name}" th:href="'/user/toHomePage?uid='+${user.id}"></a></div>
-            <div>小说简介：<sacn th:text="${novel.details}"></sacn></div>
-            <div>状态：<sacn th:text="${novel.status}"></sacn></div>
-            <div>评分：<sacn th:text="${novel.score}"></sacn></div>
-        </header>
-        <main>
-            <ul class="chaList" th:each="chapter:${chapters1}">
-                <li th:text="${chapter.cName}" th:value="${chapter.id}" onclick="toRead(this.value)"></li>
+<div class="chaMain">
+    <header>
+        <div><img th:src="${novel.imgUrl}"></div>
+        <div>小说名：
+            <scan th:text="${novel.nName}"></scan>
+        </div>
+        <div>作者：<a th:text="${user.name}" th:href="'/user/toHomePage?uid='+${user.id}"></a></div>
+        <div>小说简介：
+            <sacn th:text="${novel.details}"></sacn>
+        </div>
+        <div>状态：
+            <sacn th:text="${novel.status}"></sacn>
+        </div>
+        <div>评分：
+            <sacn th:text="${novel.score}"></sacn>
+        </div>
+
+        <div class="wrapper">
+            打分：
+            <span id="result"></span>
+            <ul id="star">
+                <li title="1分">★</li>
+                <li title="2分">★</li>
+                <li title="3分">★</li>
+                <li title="4分">★</li>
+                <li title="5分">★</li>
             </ul>
-        </main>
-        <main>
-            <ul class="chaList" th:each="chapter:${chapters2}">
-                <li th:text="${chapter.cName}" th:value="${chapter.id}" onclick="toRead(this.value)"></li>
-            </ul>
-        </main>
-    </div>
+        </div>
+    </header>
+    <main>
+        <ul class="chaList" th:each="chapter:${chapters1}">
+            <li th:text="${chapter.cName}" th:value="${chapter.id}" onclick="toRead(this.value)"></li>
+        </ul>
+    </main>
+    <main>
+        <ul class="chaList" th:each="chapter:${chapters2}">
+            <li th:text="${chapter.cName}" th:value="${chapter.id}" onclick="toRead(this.value)"></li>
+        </ul>
+    </main>
+</div>
 
 
-    <div th:if="${pageObj.totalPage}<30">
-        <div class="num">
-            <div th:each="i:${#numbers.sequence(1, pageObj.totalPage)}" class="paging-area">
-                <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}" ></a>
-                <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
-            </div>
-            <div>
-                <input id="currentPNo" type="hidden" th:value="${pageNo}" />
-                <a th:if="${pageNo} > 1" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo-1}" style="text-decoration-line: none;color: saddlebrown">上一页</a>
-                <a th:unless="${pageNo} eq ${pageObj.totalPage}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo+1}"  style="text-decoration-line: none;color: saddlebrown">下一页</a>
-            </div>
-            <div class="current" th:text="|当前在第 ${pageNo} 页|"></div>
+<div th:if="${pageObj.totalPage}<30">
+    <div class="num">
+        <div th:each="i:${#numbers.sequence(1, pageObj.totalPage)}" class="paging-area">
+            <a th:unless="${pageObj.pageNum == (i - 1)}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}"></a>
+            <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}"></div>
         </div>
+        <div>
+            <input id="currentPNo1" type="hidden" th:value="${pageNo}"/>
+            <a th:if="${pageNo} > 1" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo-1}"
+               style="text-decoration-line: none;color: saddlebrown">上一页</a>
+            <a th:unless="${pageNo} eq ${pageObj.totalPage}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo+1}"
+               style="text-decoration-line: none;color: saddlebrown">下一页</a>
+        </div>
+        <div class="current" th:text="|当前在第 ${pageNo} 页|"></div>
     </div>
-    <div th:if="${pageObj.totalPage}>=30">
-        <div class="num">
-            <div th:each="i:${#numbers.sequence(1, pageObj.totalPage/3)}" class="paging-area">
-                <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}" ></a>
-                <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
-            </div>
-        </div>
-        <div class="num">
-            <div th:each="i:${#numbers.sequence(pageObj.totalPage/3+1, 2*pageObj.totalPage/3)}" class="paging-area">
-                <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}" ></a>
-                <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
-            </div>
-        </div>
-        <div class="num">
-            <div th:each="i:${#numbers.sequence(2*pageObj.totalPage/3, pageObj.totalPage)}" class="paging-area">
-                <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}" ></a>
-                <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
-            </div>
-            <div class="current" th:text="|当前在第 ${pageNo} 页|"></div>
+</div>
+<div th:if="${pageObj.totalPage}>=30">
+    <div class="num">
+        <div th:each="i:${#numbers.sequence(1, pageObj.totalPage/3)}" class="paging-area">
+            <a th:unless="${pageObj.pageNum == (i - 1)}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}"></a>
+            <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}"></div>
         </div>
     </div>
+    <div class="num">
+        <div th:each="i:${#numbers.sequence(pageObj.totalPage/3+1, 2*pageObj.totalPage/3)}" class="paging-area">
+            <a th:unless="${pageObj.pageNum == (i - 1)}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}"></a>
+            <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}"></div>
+        </div>
+    </div>
+    <div class="num">
+        <div th:each="i:${#numbers.sequence(2*pageObj.totalPage/3, pageObj.totalPage)}" class="paging-area">
+            <a th:unless="${pageObj.pageNum == (i - 1)}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${i}" th:text="${i}"></a>
+            <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}"></div>
+        </div>
+        <div>
+            <input id="currentPNo2" type="hidden" th:value="${pageNo}"/>
+            <a th:if="${pageNo} > 1" th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo-1}"
+               style="text-decoration-line: none;color: saddlebrown">上一页</a>
+            <a th:unless="${pageNo} eq ${pageObj.totalPage}"
+               th:href="'/novel/toChapterList?nid=' + ${novel.id} + '&&pageNo=' + ${pageNo+1}"
+               style="text-decoration-line: none;color: saddlebrown">下一页</a>
+        </div>
+        <div class="current" th:text="|当前在第 ${pageNo} 页|"></div>
+    </div>
+</div>
 
 
-
-<script type="text/javascript" src="/js/chapterList.js" ></script>
+<script type="text/javascript" src="/js/chapterList.js"></script>
 </body>
 </html>

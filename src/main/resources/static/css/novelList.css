@@ -88,7 +88,7 @@ main{
     align-items: center;
     border: 2px solid black;
 }
-.current{
+.num>div:last-child{
     margin-left: 20px;
 }
 

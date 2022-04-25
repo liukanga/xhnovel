@@ -21,6 +21,6 @@ public interface NovelService {
 
     int updateNovel(Novel novel);
 
-    Paging<Novel> pageQueryAll(BasePageParam param);
+    Paging<Novel> queryNovelByKeyWords(BasePageParam param, String keyWords);
 
 }

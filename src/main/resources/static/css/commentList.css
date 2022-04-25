@@ -48,26 +48,53 @@ header>div:hover{
     text-align: center;
 }
 .splitLine{
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     height: 3px;
     background-color: sandybrown;
 }
 main{
-    width: 500px;
-    font-size: 17px;
-    padding-top: 80px;
-    margin-left: 500px
+    margin: 0 auto;
+    width: 800px;
+    padding-top: 50px;
 }
-.info>div{
-    margin: 15px;
-}
-ul{
+.list{
     display: flex;
     justify-content: space-between;
-    list-style: none;
 }
-ul>img{
-    width: 100px;
-    height: 125px;
+.list>div{
+    width: 400px;
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: center;
+}
+.num{
+    width: 900px;
+    height: 35px;
+    margin-top: 25px;
+    margin-left: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid black;
+}
+.num>div:last-child{
+    margin-left: 20px;
 }
 
+.paging-area>a{
+    font-size: 16px;
+    text-decoration-line: none;
+    color: saddlebrown;
+}
+.paging-area>a:hover{
+    cursor: pointer;
+    color: sandybrown;
+}
+.paging-area>div{
+    display: inline-block;
+    font-size: 16px;
+    color: black;
+}
+.paging-area>div:hover{
+    cursor: pointer;
+}

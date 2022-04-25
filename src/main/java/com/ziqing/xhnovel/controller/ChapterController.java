@@ -128,6 +128,6 @@ public class ChapterController {
             log.error("小说连接断开！",e);
         }
         log.info("填充完毕");
-        return "redirect:/novel/query/allBooks";
+        return "redirect:/novel/query";
     }
 }

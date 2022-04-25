@@ -24,6 +24,6 @@ public interface UserService {
 
     User queryByName(String name);
 
-    Paging<User> pageQuery(BasePageParam param);
+    Paging<User> pageQuery(BasePageParam param, String username, int status);
 
 }

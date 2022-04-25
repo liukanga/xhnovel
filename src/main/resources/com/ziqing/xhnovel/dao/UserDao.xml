@@ -36,18 +36,29 @@
         select * from user
     </select>
 
-    <select id="pageQueryAll" resultMap="userDOMap">
-        select * from user
-        <bind name="currentPage" value="pagination*pageSize"/>
-        limit #{currentPage},#{pageSize}
+    <select id="pageQueryAll" resultType="java.lang.Integer">
+        select count(*) from user where
+        <if test="username!=null">
+            name like concat('%',#{username},'%') and
+        </if>
+        <if test="status != 0">
+            status=#{status} and
+        </if>
+        <if test="status==0">
+            status!=1 and
+        </if>
+        name is not null
     </select>
 
     <select id="pageQuery" resultMap="userDOMap">
         select * from user where
-        <if test="status!=null">
+        <if test="username!=null">
+            name like concat('%',#{username},'%') and
+        </if>
+        <if test="status != 0">
             status=#{status} and
         </if>
-        <if test="status==null">
+        <if test="status==0">
             status!=1 and
         </if>
         name is not null

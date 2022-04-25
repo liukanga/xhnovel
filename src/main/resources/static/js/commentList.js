@@ -1,8 +1,3 @@
-function toReadChapter(nid) {
-    alert("即将去往目录"+nid);
-    window.location = "/novel/toChapterList?nid="+nid;
-};
-
 function switchTo(value) {
     if(value===1){
         window.location = "/user/toUserList";
@@ -33,9 +28,17 @@ currentUser.addEventListener("click", function () {
     signOut.style.display = "none";
 });
 
-function queryNovel() {
+function queryComment() {
 
-    const keyWords = document.getElementById("keyWords").textContent;
-    window.location = "/novel/query?keyWords="+keyWords;
+    const username = document.getElementById("username").value;
+    const status = document.getElementById("status").value;
 
+    if (status === '0'){
+        alert("查找所有”" + username + "”")
+        window.location = "/user/toUserList?username="+username;
+    } else{
+        alert("查找 ”" + username + "”")
+        window.location = "/user/toUserList?username="+username+"&&status="+status;
+    }
+    
 }

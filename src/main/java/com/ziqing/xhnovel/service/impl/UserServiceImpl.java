@@ -14,9 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -129,9 +127,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Paging<User> pageQuery(BasePageParam param) {
-        int totalCount = userDao.queryAllUser().size();
-        List<UserEntity> userEntities = userDao.pageQuery(param);
+    public Paging<User> pageQuery(BasePageParam param, String username, int status) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("pageSize", param.getPageSize());
+        paramMap.put("pagination", param.getPagination());
+        paramMap.put("username", username);
+        paramMap.put("status", status);
+        int totalCount = userDao.pageQueryAll(paramMap);
+        List<UserEntity> userEntities = userDao.pageQuery(paramMap);
         List<User> users = new ArrayList<>();
         if(!CollectionUtils.isEmpty(userEntities)){
             for(UserEntity userEntity : userEntities){

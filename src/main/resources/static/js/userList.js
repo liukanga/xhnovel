@@ -2,10 +2,15 @@ function switchTo(value) {
     if(value===1){
         window.location = "/user/toUserList";
     }else if(value===2){
-        window.location = "/novel/query/allBooks";
+        window.location = "/user/toUserList?status="+2;
     }else if(value===3){
+        window.location = "/novel/query";
+    }else if(value===4){
+        window.location = "/novel/query";
+    }else if(value===5){
+        window.location = "/comment/toCommentList";
+    }else if(value===6){
         var uid = document.getElementById("cUserId").value;
-        alert(uid);
         window.location = "/user/toHomePage?uid="+uid;
     }else{
         window.location = "/user/loginPage"
@@ -23,17 +28,17 @@ currentUser.addEventListener("click", function () {
     signOut.style.display = "none";
 });
 
-function nextUserPage() {
+function queryUser() {
 
-    var pNo = document.getElementById("currentPNo").value;
-    alert("当前页数：" + pNo + 1)
-    window.location = "/user/toUserList?pageNo=" + (pNo + 1)
+    const username = document.getElementById("username").value;
+    const status = document.getElementById("status").value;
 
-}
-function preUserPage() {
-
-    const pNo = document.getElementById("currentPNo").value;
-    alert("当前页数：" + pNo)
-    window.location = "/user/toUserList?pageNo=" + (pNo-1)
-
+    if (status === '0'){
+        alert("查找所有”" + username + "”")
+        window.location = "/user/toUserList?username="+username;
+    } else{
+        alert("查找 ”" + username + "”")
+        window.location = "/user/toUserList?username="+username+"&&status="+status;
+    }
+    
 }

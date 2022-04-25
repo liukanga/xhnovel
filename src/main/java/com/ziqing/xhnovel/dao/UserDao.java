@@ -2,11 +2,11 @@ package com.ziqing.xhnovel.dao;
 
 
 import com.ziqing.xhnovel.bean.UserEntity;
-import com.ziqing.xhnovel.model.BasePageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserDao {
@@ -23,6 +23,8 @@ public interface UserDao {
 
     UserEntity queryByName(String name);
 
-    List<UserEntity> pageQuery(BasePageParam param);
+    List<UserEntity> pageQuery(Map<String, Object> paramMap);
+
+    Integer pageQueryAll(Map<String, Object> paramMap);
 
 }

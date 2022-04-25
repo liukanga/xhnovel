@@ -2,11 +2,11 @@ package com.ziqing.xhnovel.dao;
 
 
 import com.ziqing.xhnovel.bean.NovelEntity;
-import com.ziqing.xhnovel.model.BasePageParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface NovelDao {
@@ -24,7 +24,9 @@ public interface NovelDao {
 
     int updateNovel(NovelEntity novelEntity);
 
-    List<NovelEntity> pageQueryAll(BasePageParam param);
+    Integer pageQueryAll(Map<String, Object> paramMap);
+
+    List<NovelEntity> queryNovelByKeyWords(Map<String, Object> paramMap);
 
 
 }

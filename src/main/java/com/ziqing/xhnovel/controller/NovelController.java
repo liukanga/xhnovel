@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -61,7 +62,7 @@ public class NovelController {
 
         if(status==1){
             novelService.removeNovel(nid);
-            return "redirect:/novel/query/allBooks";
+            return "redirect:/novel/query";
         }
         Result<User> result = removeNovelFromMyNovels(uid, nid);
         if(!result.isSuccess()){
@@ -71,33 +72,6 @@ public class NovelController {
         ra.addFlashAttribute(result.getData());
         return "redirect:/novel/toNovelList";
     }
-
-    @GetMapping("/query/allBooks")
-    public String queryAllBooks(@RequestParam(value = "pageNo", required = false, defaultValue = "1")int pageNo,
-                                @RequestParam(value = "pageSize", required = false, defaultValue = "8")int pageSize,
-                                HttpServletRequest request,
-                                Model model){
-        HttpSession session = request.getSession();
-        User currentUser = (User)session.getAttribute("user");
-        log.info("登录用户为：{}", currentUser.getName());
-        log.info("当前用户id：{}", currentUser.getId());
-
-        BasePageParam param = new BasePageParam(pageNo-1, pageSize, null, null);
-        Paging<Novel> novelPaging = novelService.pageQueryAll(param);
-        List<Novel> novelList = novelPaging.getData();
-
-        model.addAttribute("novelList", novelList);
-        model.addAttribute("pageObj",novelPaging);
-        model.addAttribute("pageNo",pageNo);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("hNo", currentUser.getStatus());
-        model.addAttribute("title", "小说列表");
-
-        return "novelList";
-
-    }
-
-
 
     @GetMapping("/query/cid/{cid}/{next}")
     public String readById(@PathVariable("cid")Long cid,
@@ -148,7 +122,7 @@ public class NovelController {
                               Model model){
 
         Novel novel = novelService.queryNovelById(nid);
-        BasePageParam param = new BasePageParam(pageNo-1, pageSize, novel.getId(), null);
+        BasePageParam param = new BasePageParam(pageNo-1, pageSize, novel.getId());
         Paging<Chapter> chapterPaging = chapterService.pageQuery(param);
         List<Chapter> totalList = chapterPaging.getData();
         List<Chapter> list1 = new ArrayList<>();
@@ -180,7 +154,9 @@ public class NovelController {
 
         User user = userService.queryUserById(aid);
         model.addAttribute("currentUser", user);
-        model.addAttribute("novels", user.getNovels());
+        model.addAttribute("hNo", user.getStatus());
+        model.addAttribute("novelList", user.getNovels());
+        model.addAttribute("page", 1);
         int status = user.getStatus();
         if(status==1){
             model.addAttribute("title", "小说列表");
@@ -192,6 +168,40 @@ public class NovelController {
         return "novelList";
 
 
+    }
+
+
+    @GetMapping("/query")
+    public String queryNovelByKeyWords(@RequestParam(value = "keyWords", required = false, defaultValue = "")String keyWords,
+                                       @RequestParam(value = "pageNo", required = false, defaultValue = "1")int pageNo,
+                                       @RequestParam(value = "pageSize", required = false, defaultValue = "8")int pageSize,
+                                       HttpServletRequest request,
+                                       Model model){
+
+        HttpSession session = request.getSession();
+        User currentUser = (User)session.getAttribute("user");
+         log.info("登录用户为：{}", currentUser.getName());
+        log.info("当前用户id：{}", currentUser.getId());
+
+        BasePageParam param = new BasePageParam(pageNo-1, pageSize, null);
+        Paging<Novel> novelPaging = null;
+        if (StringUtils.hasText(keyWords)){
+            novelPaging = novelService.queryNovelByKeyWords(param, keyWords);
+        }else{
+            novelPaging = novelService.queryNovelByKeyWords(param, null);
+        }
+
+        List<Novel> novelList = novelPaging.getData();
+
+        model.addAttribute("novelList", novelList);
+        model.addAttribute("pageObj",novelPaging);
+        model.addAttribute("pageNo",pageNo);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("hNo", currentUser.getStatus());
+        model.addAttribute("title", "小说列表");
+        model.addAttribute("page", 2);
+
+        return "novelList";
     }
 
     @GetMapping("/testDemo")
