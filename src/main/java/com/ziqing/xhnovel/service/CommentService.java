@@ -15,4 +15,6 @@ public interface CommentService {
 
     Paging<Comment> pageQuery(BasePageParam param, Long userId, Long commentatorId);
 
+    int removeComment(Long id);
+
 }

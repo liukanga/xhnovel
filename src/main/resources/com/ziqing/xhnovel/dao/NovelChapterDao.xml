@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ziqing.xhnovel.dao.NovelChapterDao">
+    <resultMap id="ncMap" type="com.ziqing.xhnovel.bean.NovelChapter">
+        <id property="id" column="id"/>
+        <result property="nid" column="nid" />
+        <result property="chid" column="chid" />
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.ziqing.xhnovel.bean.NovelChapter" useGeneratedKeys="true" keyProperty="id">
+        insert into novel_chapter(nid, chid) values (#{nid}, #{chid})
+    </insert>
+
+    <update id="update" parameterType="com.ziqing.xhnovel.bean.NovelChapter">
+        update novel_chapter set nid=#{nid},chid=#{chid} where id=#{id}
+    </update>
+
+    <select id="query" resultMap="ncMap">
+        select id, nid, chid from novel_chapter where
+        <if test="id!=null">
+            id = #{id}
+        </if>
+        <if test="id!=null">
+            nid = #{nid}
+        </if>
+        <if test="id!=null">
+            chid = #{chid}
+        </if>
+    </select>
+
+    <delete id="delete">
+        delete from novel_chapter where
+        <if test="id!=null">
+            id = #{id}
+        </if>
+        <if test="id!=null">
+            nid = #{nid}
+        </if>
+        <if test="id!=null">
+            chid = #{chid}
+        </if>
+    </delete>
+
+</mapper>

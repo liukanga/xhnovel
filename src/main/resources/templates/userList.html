@@ -8,49 +8,53 @@
 </head>
 <body background="/images/login-bg.jpg">
 
-    <header>
-        <div th:if="${hNo} eq 1">
-            <div class="cUser" onclick="switchTo(1)">用户管理</div>
-            <div class="downLine"></div>
+<header>
+    <div th:if="${hNo} eq 1">
+        <div class="cUser" onclick="switchTo(1)">用户管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(2)">作者列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(3)">小说管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(4)">小说列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1" >
+        <div class="cNovel" onclick="switchTo(5)">评论管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div class="cNovel" onclick="switchTo(6)">我的主页</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div style="display: flex">
+            <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
+            <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
         </div>
-        <div th:unless="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(2)">作者列表</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:if="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(3)">小说管理</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:unless="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(4)">小说列表</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:if="${hNo} eq 1" >
-            <div class="cNovel" onclick="switchTo(5)">评论管理</div>
-            <div class="downLine"></div>
-        </div>
-        <div>
-            <div class="cNovel" onclick="switchTo(6)">我的主页</div>
-            <div class="downLine"></div>
-        </div>
-        <div>
-            <div style="display: flex">
-                <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
-                <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
-            </div>
-            <input type=hidden id="cUserId" th:value="${currentUser.id}" />
-            <div class="cDetails" onclick="switchTo(3)">个人信息</div>
-            <div class="signOut" onclick="switchTo(4)">退出</div>
-            <div class="downLine"></div>
-        </div>
-    </header>
+        <input type=hidden id="cUserId" th:value="${currentUser.id}" />
+        <div th:if="${currentUser.status} eq 3" class="cDetails" onclick="switchTo(7)">我的书架</div>
+        <div th:if="${currentUser.status} eq 2" class="cDetails" onclick="switchTo(7)">我的作品</div>
+        <div class="cDetails" onclick="switchTo(6)">个人信息</div>
+        <div class="signOut" onclick="switchTo(8)">退出</div>
+        <div class="downLine"></div>
+    </div>
+</header>
     <main>
         <div class="ttl" th:if="${hNo} eq 1">用户列表</div>
         <div class="ttl" th:unless="${hNo} eq 1">作者列表</div>
         <div class="splitLine"></div>
         <div style="display: flex">
+            <button th:if="${hNo} eq 1" onclick="addUser()" >添加用户</button>
+            <div style="margin-left: 150px;margin-right: 150px"></div>
             <input type="text" id="username" placeholder="请输入用户名" />
-            <select id="status">
+            <select id="status" th:if="${hNo} eq 1">
                 <option value="0">所有</option>
                 <option value="2">作者</option>
                 <option value="3">读者</option>
@@ -76,8 +80,8 @@
             <div class="status" th:if="${user.status} eq 3">读者</div>
             <div class="details" th:text="${user.details}"></div>
             <div th:if="${hNo} eq 1">
-                <button>修改</button>
-                <button>删除</button>
+                <button th:value="${user.id}" onclick="modifyUser(this.value)">修改</button>
+                <button th:value="${user.id}" onclick="removeUser(this.value)">删除</button>
             </div>
 
         </div>

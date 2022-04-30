@@ -8,18 +8,19 @@ import com.ziqing.xhnovel.model.Novel;
 import com.ziqing.xhnovel.model.Paging;
 import com.ziqing.xhnovel.service.ChapterService;
 import com.ziqing.xhnovel.service.NovelService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author 刘梓清
  */
+@Slf4j
 @Service
 public class NovelServiceImpl implements NovelService {
 
@@ -84,14 +85,12 @@ public class NovelServiceImpl implements NovelService {
     }
 
     @Override
-    public Paging<Novel> queryNovelByKeyWords(BasePageParam param, String keyWords) {
+    public Paging<Novel> queryNovelByKeyWords(BasePageParam param, String keyWords, String status) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("pageSize", param.getPageSize());
         paramMap.put("pagination", param.getPagination());
-        if (StringUtils.hasText(keyWords)) {
-            keyWords = "%" + keyWords + "%";
-        }
         paramMap.put("keyWords", keyWords);
+        paramMap.put("status", status);
         int totalCount = novelDao.pageQueryAll(paramMap);
         List<NovelEntity> novelEntities = novelDao.queryNovelByKeyWords(paramMap);
         List<Novel> novelList = new ArrayList<>();
@@ -125,8 +124,18 @@ public class NovelServiceImpl implements NovelService {
         }
 
         novelEntity.setScore(novel.getScore());
-        novelEntity.setGmtCreated(novel.getGmtCreated());
-        novelEntity.setGmtModified(novel.getGmtModified());
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(novel.getGmtCreated())){
+                novelEntity.setGmtCreated(sdf.parse(sdf.format(novel.getGmtCreated())));
+            }
+            if (!Objects.isNull(novel.getGmtModified())){
+                novelEntity.setGmtModified(sdf.parse(sdf.format(novel.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
         return novelEntity;
     }
 
@@ -156,8 +165,17 @@ public class NovelServiceImpl implements NovelService {
         }
 
         novel.setScore(novelEntity.getScore());
-        novel.setGmtCreated(novelEntity.getGmtCreated());
-        novel.setGmtModified(novelEntity.getGmtModified());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(novelEntity.getGmtCreated())){
+                novel.setGmtCreated(sdf.parse(sdf.format(novelEntity.getGmtCreated())));
+            }
+            if (!Objects.isNull(novelEntity.getGmtModified())){
+                novel.setGmtModified(sdf.parse(sdf.format(novelEntity.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
         return novel;
 
     }

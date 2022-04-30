@@ -1,5 +1,6 @@
 package com.ziqing.xhnovel.controller;
 
+import com.ziqing.xhnovel.exception.XHNException;
 import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.ChapterService;
 import com.ziqing.xhnovel.service.NovelService;
@@ -28,8 +29,18 @@ public class NovelController {
     @Autowired
     private ChapterService chapterService;
 
-    @GetMapping("/addNovel")
-    @ResponseBody
+
+    @GetMapping("/toAddNovel")
+    public String toAddNovel(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("hNo", currentUser.getStatus());
+        return "/addNovel";
+    }
+
+//    @GetMapping("/addNovel")
+//    @ResponseBody
     public Map<String, Novel> addNovel(){
 
         Novel novel = new Novel();
@@ -53,7 +64,7 @@ public class NovelController {
 
     }
 
-    @GetMapping("/remove/{uid}/{nid}/{status}")
+    /*@GetMapping("/remove/{uid}/{nid}/{status}")
     public String removeNovel(@PathVariable("uid")Long uid,
                               @PathVariable("nid")Long nid,
                               @PathVariable("status")int status,
@@ -71,7 +82,7 @@ public class NovelController {
 
         ra.addFlashAttribute(result.getData());
         return "redirect:/novel/toNovelList";
-    }
+    }*/
 
     @GetMapping("/query/cid/{cid}/{next}")
     public String readById(@PathVariable("cid")Long cid,
@@ -116,15 +127,16 @@ public class NovelController {
     }
 
     @GetMapping("/toChapterList")
-    public String chapterList(@RequestParam(value = "nid", required = false)Long nid,
+    public String chapterList(@RequestParam(value = "nid")Long nid,
                               @RequestParam(value = "pageNo", required = false, defaultValue = "1")int pageNo,
                               @RequestParam(value = "pageSize", required = false, defaultValue = "28")int pageSize,
-                              Model model){
+                              Model model, HttpServletRequest request){
 
         Novel novel = novelService.queryNovelById(nid);
         BasePageParam param = new BasePageParam(pageNo-1, pageSize, novel.getId());
         Paging<Chapter> chapterPaging = chapterService.pageQuery(param);
         List<Chapter> totalList = chapterPaging.getData();
+
         List<Chapter> list1 = new ArrayList<>();
         List<Chapter> list2 = new ArrayList<>();
         for(int i=0;i<totalList.size();i++){
@@ -144,7 +156,21 @@ public class NovelController {
         model.addAttribute("chapters2",list2);
         model.addAttribute("pageObj",chapterPaging);
         model.addAttribute("pageNo",pageNo);
+        model.addAttribute("isCollect", 0);
 
+
+        HttpSession session = request.getSession();
+        User currentUser = (User)session.getAttribute("user");
+
+        if (currentUser.getNovels().contains(novel)){
+            model.addAttribute("isCollect", 1);
+        }
+
+        if (pageSize != 28){
+            model.addAttribute("chapters",totalList);
+            return "modifyNovel";
+        }
+        model.addAttribute("currentUser",currentUser);
         return "chapterList";
 
     }
@@ -154,9 +180,11 @@ public class NovelController {
 
         User user = userService.queryUserById(aid);
         model.addAttribute("currentUser", user);
-        model.addAttribute("hNo", user.getStatus());
+        model.addAttribute("hNo", 1);
         model.addAttribute("novelList", user.getNovels());
-        model.addAttribute("page", 1);
+        model.addAttribute("page1", 1);
+        model.addAttribute("page2", user.getStatus());
+        model.addAttribute("myPage", 1);
         int status = user.getStatus();
         if(status==1){
             model.addAttribute("title", "小说列表");
@@ -172,7 +200,8 @@ public class NovelController {
 
 
     @GetMapping("/query")
-    public String queryNovelByKeyWords(@RequestParam(value = "keyWords", required = false, defaultValue = "")String keyWords,
+    public String queryNovelByKeyWords(@RequestParam(value = "keyWords", required = false)String keyWords,
+                                       @RequestParam(value = "status", required = false)String status,
                                        @RequestParam(value = "pageNo", required = false, defaultValue = "1")int pageNo,
                                        @RequestParam(value = "pageSize", required = false, defaultValue = "8")int pageSize,
                                        HttpServletRequest request,
@@ -180,16 +209,13 @@ public class NovelController {
 
         HttpSession session = request.getSession();
         User currentUser = (User)session.getAttribute("user");
-         log.info("登录用户为：{}", currentUser.getName());
+        log.info("登录用户为：{}", currentUser.getName());
         log.info("当前用户id：{}", currentUser.getId());
 
         BasePageParam param = new BasePageParam(pageNo-1, pageSize, null);
         Paging<Novel> novelPaging = null;
-        if (StringUtils.hasText(keyWords)){
-            novelPaging = novelService.queryNovelByKeyWords(param, keyWords);
-        }else{
-            novelPaging = novelService.queryNovelByKeyWords(param, null);
-        }
+
+        novelPaging = novelService.queryNovelByKeyWords(param, keyWords, status);
 
         List<Novel> novelList = novelPaging.getData();
 
@@ -199,9 +225,129 @@ public class NovelController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("hNo", currentUser.getStatus());
         model.addAttribute("title", "小说列表");
-        model.addAttribute("page", 2);
+        model.addAttribute("page1", currentUser.getStatus());
+        model.addAttribute("page2", currentUser.getStatus());
+
+        if (currentUser.getStatus()!=1){
+            model.addAttribute("page2", 4);
+        }
 
         return "novelList";
+    }
+
+
+    @GetMapping("/addNovel/bookShelf")
+    public String addNovelToBookShelf(@RequestParam("nid")Long nid, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        User currentUser = (User)session.getAttribute("user");
+
+        List<Novel> novels = currentUser.getNovels();
+        Novel novel = novelService.queryNovelById(nid);
+        novels.add(novel);
+
+        currentUser.setNovels(novels);
+        userService.updateUser(currentUser);
+
+        return "redirect:/novel/toChapterList?nid"+nid;
+    }
+
+    @GetMapping("/addNovel")
+    public String insertNovel(@RequestParam("name")String name,
+                                     @RequestParam("details")String details,
+                                     @RequestParam("status")String status,
+                                     @RequestParam("duration")int duration,
+                                     HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        String imageUrl = (String) session.getAttribute("imageUrl");
+        User user = (User) session.getAttribute("user");
+
+        Novel novel = new Novel();
+        novel.setNName(name);
+        novel.setStatus(status);
+        novel.setDetails(details);
+        novel.setImgUrl(imageUrl);
+        novelService.addNovel(novel);
+
+        List<Novel> novels = user.getNovels();
+        novels.add(novel);
+        user.setNovels(novels);
+        user.setDuration(user.getDuration()+duration);
+
+        userService.updateUser(user);
+
+        return "redirect:/novel/toModifyNovel?nid="+novel.getId();
+
+    }
+
+
+    @GetMapping("/remove")
+    public String removeNovel(@RequestParam("nid")Long nid,
+                              @RequestParam("uid")Long uid, HttpServletRequest request){
+
+        User currentUser = userService.queryUserById(uid);
+
+        if (currentUser.getStatus()==1){
+            novelService.removeNovel(nid);
+            return "redirect:/novel/query";
+        }
+
+        removeNovelFromMyNovels(currentUser, nid);
+        return "redirect:/novel/toNovelList/"+uid;
+    }
+
+    @GetMapping("/toModifyNovel")
+    public String toModifyNovel(@RequestParam("nid")Long nid, Model model, HttpServletRequest request){
+
+        Novel novel = novelService.queryNovelById(nid);
+        model.addAttribute("novel", novel);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("novelId", novel.getId());
+        User currentUser = (User) session.getAttribute("user");
+
+//        Paging<Chapter> pageObj = new Paging<>(0, 8, novel.getChapters().size(), novel.getChapters());
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("hNo", currentUser.getStatus());
+        model.addAttribute("chapters", novel.getChapters());
+
+        return "modifyNovel";
+    }
+
+
+    @PostMapping("/modifyNovel")
+    @ResponseBody
+    public Result<Novel> modifyNovel(@RequestBody Novel novel,
+                              HttpServletRequest request, Model model){
+
+        Result<Novel> result = new Result<>();
+
+        HttpSession session = request.getSession();
+        Long nid = (Long) session.getAttribute("novelId");
+
+        Novel mNovel = novelService.queryNovelById(nid);
+
+        if (StringUtils.hasText(novel.getNName())){
+            mNovel.setNName(novel.getNName());
+        }
+        if (StringUtils.hasText(novel.getDetails())){
+            mNovel.setDetails(novel.getDetails());
+        }
+        if (StringUtils.hasText(novel.getStatus())){
+            mNovel.setStatus(novel.getStatus());
+        }
+        mNovel.setGmtModified(new Date());
+
+        novelService.updateNovel(novel);
+
+        result.setSuccess(true);
+        result.setData(novel);
+        result.setMessage("更新小说成功");
+        result.setCode(200);
+
+        return result;
     }
 
     @GetMapping("/testDemo")
@@ -221,9 +367,9 @@ public class NovelController {
     }
 
 
-    private Result<User> removeNovelFromMyNovels(Long uid, Long nid){
+    private Result<User> removeNovelFromMyNovels(User user, Long nid){
         Result<User> result = new Result<>();
-        User user = userService.queryUserById(uid);
+
         Novel novel = novelService.queryNovelById(nid);
         List<Novel> novels = user.getNovels();
         novels.remove(novel);

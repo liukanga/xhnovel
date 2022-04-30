@@ -1,14 +1,57 @@
 body{
-    text-align: center;
-    background-repeat:no-repeat ;background-size:100% 100%;
-    background-attachment: fixed;
     font-family: "华文楷体";
 }
-.reg-contain>div:first-child{
-    margin-top: 40px;
-    font-size: 50px;
+header{
+    width: 500px;
+    height: 30px;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 200px;
+}
+header>div:hover{
+    background-color: rgba(139,69,19,0.5);
+}
+.downLine{
+    height: 1px;
+    border: 1px solid sandybrown;
+    background-color: sandybrown;
+}
+.cDetails{
+    margin-top: 10px;
+    display: none;
+}
+.cDetails:hover{
+    cursor: pointer;
+}
+.signOut{
+    margin-top: 10px;
+    display: none;
+}
+.signOut:hover{
+    cursor: pointer;
+}
+.cNovel:hover{
+    cursor: pointer;
+}
+.cUser:hover{
+    cursor: pointer;
+}
+.ccUser:hover{
+    cursor: pointer;
+}
+.ttl{
+    width: 500px;
+    margin: 0 auto;
+    font-size: 28px;
+    font-weight: 800;
+    padding-bottom: 20px;
     text-align: center;
-    margin-bottom: 20px;
+}
+.splitLine{
+    margin-bottom: 30px;
+    height: 3px;
+    background-color: sandybrown;
 }
 
 .reg-form{
@@ -94,30 +137,4 @@ textarea:hover{
 .reg-btn:hover
 {
     background-color:rgba(128,128,128,0.5);
-}
-
-.copyright {
-    padding-top: 50px;
-    text-align: center;
-    font-family: "华文楷体";
-
-}
-.copyright p {
-    font-size: 18px;
-    font-weight: 400;
-    color: black;
-
-}
-.copyright p a{
-    font-size: 18px;
-    font-weight: 400;
-    color: saddlebrown;
-    text-decoration:none;
-}
-.copyright p>a:first-child{
-    color: black;
-}
-.copyright p a:hover{
-    color:sandybrown;
-    text-decoration:black;
 }

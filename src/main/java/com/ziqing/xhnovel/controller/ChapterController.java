@@ -2,6 +2,8 @@ package com.ziqing.xhnovel.controller;
 
 import com.ziqing.xhnovel.model.Chapter;
 import com.ziqing.xhnovel.model.Novel;
+import com.ziqing.xhnovel.model.Result;
+import com.ziqing.xhnovel.model.User;
 import com.ziqing.xhnovel.service.ChapterService;
 import com.ziqing.xhnovel.service.NovelService;
 import com.ziqing.xhnovel.service.UserService;
@@ -13,12 +15,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,25 +39,6 @@ public class ChapterController {
     private NovelService novelService;
     @Autowired
     private UserService userService;
-
-
-    @GetMapping("/modify")
-    @ResponseBody
-    public Map<String, List<Chapter>> modify(){
-
-        List<Novel> novels = novelService.queryAllBooks();
-        Novel novel = novels.get(0);
-
-        List<Chapter> chapters = novel.getChapters();
-
-
-        Map<String, List<Chapter>> result = new HashMap<>();
-
-        result.put("修改结果", chapters);
-
-        return result;
-
-    }
 
     @GetMapping("/testDemo")
     public String fill(){
@@ -130,4 +115,93 @@ public class ChapterController {
         log.info("填充完毕");
         return "redirect:/novel/query";
     }
+
+    @GetMapping("/modify")
+    public String modify(@RequestParam("cid")Long cid, HttpServletRequest request){
+
+        Chapter chapter = chapterService.queryChapter(cid);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("chapter", chapter);
+
+        return "redirect:/chapter/modifyChapter?page=2";
+
+    }
+
+    @GetMapping("/toModifyChapter")
+    public String toModifyChapter(@RequestParam("page")int page, Model model, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+        model.addAttribute("page", page);
+        model.addAttribute("chapter", new Chapter());
+        model.addAttribute("hNo", currentUser.getStatus());
+        model.addAttribute("currentUser", currentUser);
+
+        if (page == 2){
+
+            Chapter chapter = (Chapter) session.getAttribute("chapter");
+            model.addAttribute("chapter", chapter);
+        }
+
+        return "modifyChapter";
+    }
+
+    @PostMapping("/modifyChapter")
+    public String modifyChapter(@RequestParam(name = "cName")String name,
+                                @RequestParam(name = "content")String content, HttpServletRequest request){
+
+
+        HttpSession session = request.getSession();
+        Chapter chapter = (Chapter) session.getAttribute("chapter");
+
+        chapter.setCName(name);
+        chapter.setCName(content);
+        chapter.setGmtModified(new Date());
+
+        int i = chapterService.updateChapter(chapter);
+
+        if (i == 0){
+            return "redirect:/novel/toModifyNovel?nid="+chapter.getNid();
+        }
+
+        return "error";
+    }
+
+    @PostMapping("/addChapter")
+    public String addChapter(@RequestParam(name = "cName")String name,
+                             @RequestParam(name = "content")String content, HttpServletRequest request){
+
+        HttpSession session = request.getSession();
+        Long nid = (Long) session.getAttribute("novelId");
+
+        Novel novel = novelService.queryNovelById(nid);
+
+        List<Chapter> chapters = novel.getChapters();
+
+        Chapter chapter = new Chapter();
+        chapter.setCName(name);
+        chapter.setContent(content);
+        chapter.setNid(novel.getId());
+        StringBuilder sb = new StringBuilder();
+        sb.append(novel.getId());
+        sb.append(chapters.size()+1);
+        chapter.setMark(sb.toString());
+        chapter.setWordNum(content.getBytes(StandardCharsets.UTF_8).length);
+        chapter.setGmtModified(new Date());
+        chapter.setGmtCreated(new Date());
+
+        int i = chapterService.insertChapter(chapter);
+
+        chapters.add(chapter);
+        novel.setChapters(chapters);
+        novelService.updateNovel(novel);
+
+        if (i == 0){
+            return "redirect:/novel/toModifyNovel?nid="+novel.getId();
+        }
+
+        return "modifyChapter";
+    }
+
 }

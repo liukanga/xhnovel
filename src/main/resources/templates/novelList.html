@@ -7,64 +7,88 @@
     <link rel="stylesheet" href="/css/novelList.css">
 </head>
 <body background="/images/login-bg.jpg">
-    <header>
-        <div th:if="${hNo} eq 1">
-            <div class="cUser" onclick="switchTo(1)">用户管理</div>
-            <div class="downLine"></div>
+<header>
+    <div th:if="${hNo} eq 1">
+        <div class="cUser" onclick="switchTo(1)">用户管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(2)">作者列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(3)">小说管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(4)">小说列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1" >
+        <div class="cNovel" onclick="switchTo(5)">评论管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div class="cNovel" onclick="switchTo(6)">我的主页</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div style="display: flex">
+            <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
+            <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
         </div>
-        <div th:unless="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(2)">作者列表</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:if="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(3)">小说管理</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:unless="${hNo} eq 1">
-            <div class="cNovel" onclick="switchTo(4)">小说列表</div>
-            <div class="downLine"></div>
-        </div>
-        <div th:if="${hNo} eq 1" >
-            <div class="cNovel" onclick="switchTo(5)">评论管理</div>
-            <div class="downLine"></div>
-        </div>
-        <div>
-            <div class="cNovel" onclick="switchTo(6)">我的主页</div>
-            <div class="downLine"></div>
-        </div>
-        <div>
-            <div style="display: flex">
-                <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
-                <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
-            </div>
-            <input type=hidden id="cUserId" th:value="${currentUser.id}" />
-            <div class="cDetails" onclick="switchTo(3)">个人信息</div>
-            <div class="signOut" onclick="switchTo(4)">退出</div>
-            <div class="downLine"></div>
-        </div>
-    </header>
+        <input type=hidden id="cUserId" th:value="${currentUser.id}" />
+        <div th:if="${currentUser.status} eq 3" class="cDetails" onclick="switchTo(7)">我的书架</div>
+        <div th:if="${currentUser.status} eq 2" class="cDetails" onclick="switchTo(7)">我的作品</div>
+        <div class="cDetails" onclick="switchTo(6)">个人信息</div>
+        <div class="signOut" onclick="switchTo(8)">退出</div>
+        <div class="downLine"></div>
+    </div>
+</header>
 
     <main>
         <div class="ttl" th:text="${title}"></div>
         <div class="splitLine"></div>
-        <div th:if="${page} eq 2" style="display: flex">
+        <div style="display: flex">
+            <button th:unless="${currentUser} eq 3" onclick="addNovel()" >发布小说</button>
+            <div style="margin-left: 150px;margin-right: 150px"></div>
             <input type="text" id="keyWords" placeholder="请输入小说名或作者名" />
             <select id="status">
                 <option value="0">所有</option>
-                <option value="2">完结</option>
-                <option value="3">连载</option>
+                <option value="完结">完结</option>
+                <option value="连载">连载</option>
             </select>
             <button onclick="queryNovel()">查询</button>
         </div>
 
-        <ul class="uli" th:each="novel:${novelList}">
-            <img th:src="${novel.imgUrl}" />
-            <li th:text="|${novel.nName}|" th:value="${novel.id}" onclick="toReadChapter(this.value)"></li>
-            <div class="details" th:text="|简介：${novel.details}|"></div>
-        </ul>
+        <div class="uli">
+            <div style="font-weight: 700">封面</div>
+            <div style="font-weight: 700">小说名</div>
+            <div style="font-weight: 700">状态</div>
+            <div class="details" style="font-weight: 700">简介</div>
+            <div th:if="${hNo} eq 1" style="font-weight: 700">操作</div>
+        </div>
+
+        <div class="uli" th:each="novel:${novelList}">
+            <img th:src="${novel.imgUrl}" th:onclick="toReadChapter([[${novel.id}]])"/>
+            <div th:text="${novel.nName}" ></div>
+            <div th:text="${novel.status}"></div>
+            <div class="details" th:text="${novel.details}" style="overflow: hidden;text-overflow:ellipsis;-webkit-line-break: normal;"></div>
+            <div th:if="${page2} eq 1">
+                <button th:onclick="modifyNovel([[${novel.id}]])">修改</button>
+                <button th:onclick="removeNovel([[${novel.id}]])">删除</button>
+            </div>
+            <div  th:if="${page2} eq 2">
+                <button th:onclick="modifyNovel([[${novel.id}]])">更新</button>
+                <button th:onclick="removeNovel([[${novel.id}]])">删除</button>
+            </div>
+            <div th:if="${page2} eq 3">
+                <button th:onclick="removeNovel([[${novel.id}]])">移出书架</button>
+            </div>
+        </div>
     </main>
 
-    <div class="num" th:if="${page} eq 2">
+    <div th:if="${myPage} eq 1" class="num">
         <div th:each="i:${#numbers.sequence(1, pageObj.totalPage)}" class="paging-area">
             <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/query?pageNo=' + ${i}" th:text="${i}" ></a>
             <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>

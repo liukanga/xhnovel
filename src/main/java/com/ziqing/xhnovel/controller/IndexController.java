@@ -45,7 +45,7 @@ public class IndexController {
             result.setMessage("上传图片成功");
 
             HttpSession session = request.getSession();
-            session.setAttribute("imageEntity", imageEntity);
+            session.setAttribute("imageUrl", imageEntity.getUrlPath());
 
         }catch (Exception e){
             log.error("********* 上传文件失败", e);

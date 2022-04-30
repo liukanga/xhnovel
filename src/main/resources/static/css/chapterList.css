@@ -1,17 +1,68 @@
 body{
     font-family: "华文楷体";
 }
+header{
+    width: 500px;
+    height: 30px;
+    float: right;
+    display: flex;
+    justify-content: space-between;
+}
+header>div:hover{
+    background-color: rgba(139,69,19,0.5);
+}
+.downLine{
+    height: 1px;
+    border: 1px solid sandybrown;
+    background-color: sandybrown;
+}
+.cDetails{
+    margin-top: 10px;
+    display: none;
+}
+.cDetails:hover{
+    cursor: pointer;
+}
+.signOut{
+    margin-top: 10px;
+    display: none;
+}
+.signOut:hover{
+    cursor: pointer;
+}
+.cNovel:hover{
+    cursor: pointer;
+}
+.cUser:hover{
+    cursor: pointer;
+}
+.ccUser:hover{
+    cursor: pointer;
+}
+.ttl{
+    width: 500px;
+    margin: 0 auto;
+    font-size: 28px;
+    font-weight: 800;
+    padding-bottom: 20px;
+    text-align: center;
+}
+.splitLine{
+    margin-bottom: 30px;
+    height: 3px;
+    background-color: sandybrown;
+}
 .chaMain{
     width: 1300px;
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
 }
-header{
+.des{
     width: 400px;
     margin-top: 50px;
 }
-header>div{
+.des>div{
     margin: 12px;
 }
 main{

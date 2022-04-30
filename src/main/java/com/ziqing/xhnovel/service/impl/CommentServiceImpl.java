@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -63,6 +62,11 @@ public class CommentServiceImpl implements CommentService {
         return new Paging<>(param.getPagination(), param.getPageSize(), totalCount, commentList);
     }
 
+    @Override
+    public int removeComment(Long id) {
+        return commentDao.removeComment(id);
+    }
+
     private Comment toModel(CommentEntity commentEntity){
         Comment comment = new Comment();
         if (commentEntity.getId()!=null){
@@ -71,8 +75,17 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(userService.queryUserById(commentEntity.getUserId()));
         comment.setCommentator(userService.queryUserById(commentEntity.getCommentatorId()));
         comment.setContent(commentEntity.getContent());
-        comment.setGmtCreated(commentEntity.getGmtCreated());
-        comment.setGmtModified(commentEntity.getGmtModified());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(commentEntity.getGmtCreated())){
+                comment.setGmtCreated(sdf.parse(sdf.format(commentEntity.getGmtCreated())));
+            }
+            if (!Objects.isNull(commentEntity.getGmtModified())){
+                comment.setGmtModified(sdf.parse(sdf.format(commentEntity.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
 
         return comment;
     }
@@ -85,8 +98,17 @@ public class CommentServiceImpl implements CommentService {
         commentEntity.setUserId(comment.getUser().getId());
         commentEntity.setCommentatorId(comment.getCommentator().getId());
         commentEntity.setContent(comment.getContent());
-        commentEntity.setGmtCreated(comment.getGmtCreated());
-        commentEntity.setGmtModified(comment.getGmtModified());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(comment.getGmtCreated())){
+                commentEntity.setGmtCreated(sdf.parse(sdf.format(comment.getGmtCreated())));
+            }
+            if (!Objects.isNull(comment.getGmtModified())){
+                commentEntity.setGmtModified(sdf.parse(sdf.format(comment.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
 
         return commentEntity;
     }

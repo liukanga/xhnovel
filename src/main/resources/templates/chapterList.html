@@ -7,8 +7,48 @@
     <link rel="stylesheet" href="/css/chapterList.css">
 </head>
 <body background="/images/login-bg.jpg">
+
+<header>
+    <div th:if="${hNo} eq 1">
+        <div class="cUser" onclick="switchTo(1)">用户管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(2)">作者列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(3)">小说管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(4)">小说列表</div>
+        <div class="downLine"></div>
+    </div>
+    <div th:if="${hNo} eq 1" >
+        <div class="cNovel" onclick="switchTo(5)">评论管理</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div class="cNovel" onclick="switchTo(6)">我的主页</div>
+        <div class="downLine"></div>
+    </div>
+    <div>
+        <div style="display: flex">
+            <img th:src="${currentUser.imageUrl}" style="width: 50px;height: 50px;border-radius: 50%;"  alt=""/>
+            <div class="ccUser" th:text="|您好！${currentUser.name}|"></div>
+        </div>
+        <input type=hidden id="cUserId" th:value="${currentUser.id}" />
+        <div th:if="${currentUser.status} eq 3" class="cDetails" onclick="switchTo(7)">我的书架</div>
+        <div th:if="${currentUser.status} eq 2" class="cDetails" onclick="switchTo(7)">我的作品</div>
+        <div class="cDetails" onclick="switchTo(6)">个人信息</div>
+        <div class="signOut" onclick="switchTo(8)">退出</div>
+        <div class="downLine"></div>
+    </div>
+</header>
+
 <div class="chaMain">
-    <header>
+    <nav class="des">
         <div><img th:src="${novel.imgUrl}"></div>
         <div>小说名：
             <scan th:text="${novel.nName}"></scan>
@@ -35,7 +75,9 @@
                 <li title="5分">★</li>
             </ul>
         </div>
-    </header>
+        <button th:if="${isCollect} eq 0" th:value="${novel.id}" onclick="addNovelToBookshelf(this.value)">加入书架</button>
+        <div  th:if="${isCollect} eq 1" >已加入书架</div>
+    </nav>
     <main>
         <ul class="chaList" th:each="chapter:${chapters1}">
             <li th:text="${chapter.cName}" th:value="${chapter.id}" onclick="toRead(this.value)"></li>

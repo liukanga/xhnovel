@@ -57,9 +57,9 @@ public class UserController {
     public Result<User> register(@RequestBody User user, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        ImageEntity imageEntity = (ImageEntity) session.getAttribute("imageEntity");
+        String imageUrl = (String) session.getAttribute("imageUrl");
 
-        user.setImageUrl(imageEntity.getUrlPath());
+        user.setImageUrl(imageUrl);
         Result<User> res = userService.register(user);
 
         if (res.isSuccess()) {
@@ -123,6 +123,12 @@ public class UserController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("hNo", currentUser.getStatus());
         model.addAttribute("commentList", commentList);
+        model.addAttribute("cmt", 1);
+
+        if (currentUser.getId().equals(user.getId()) && currentUser.getStatus()!=2 ){
+            model.addAttribute("cmt", 2);
+        }
+
 
         return "homePage";
     }

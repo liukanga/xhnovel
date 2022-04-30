@@ -20,7 +20,7 @@ public class Paging<T> {
     public Paging(int pageNum, int pageSize, int totalCount, List<T> data){
         this.pageNum = pageNum;
         this.pageSize = pageSize;
-        this.totalPage = (int)(totalCount+pageSize-1)/pageSize;
+        this.totalPage = (totalCount+pageSize-1)/pageSize;
         this.data = data;
     }
 

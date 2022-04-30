@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>添加小说</title>
-    <link rel="stylesheet" href="/css/addNovel.css" />
+    <title>修改小说</title>
+    <link rel="stylesheet" href="/css/modifyNovel.css" />
     <script language="JavaScript" src="/js/jquery-3.6.0.js"></script>
 </head>
 <body background="/images/login-bg.jpg">
@@ -47,39 +47,39 @@
     </div>
 </header>
 
-<div style="padding-top: 80px" class="reg-form">
+<div  style="padding-top: 80px" class="reg-form">
     <div class="txtb">
         <div class="intxt">小说名：</div>
-        <input type="text" id="name" placeholder="请输入小说名"/>
+        <input type="text" id="name" th:value="${novel.nName}"/>
     </div>
     <div class="txtb">
-        <div class="intxt">上传封面：</div>
+        <div class="intxt">封面：</div>
         <input style="display: block" type='file' name="file" onchange='showImg()' id='img_file'/>
-        <img src='' alt='' id='img_id' style="width:100px;height:100px">
+        <img th:src="${novel.imgUrl}" alt='' id='img_id' style="width:100px;height:100px;border-radius: 50%">
     </div>
     <div class="txtb">
-        <div class="intxt">状态：</div>
         <select id="status">
             <option value="0">请选择状态</option>
-            <option value="2">连载</option>
-            <option value="3">完结</option>
+            <option value="连载">连载</option>
+            <option value="完结">完结</option>
         </select>
     </div>
     <div class="txtb">
-        <div class="intxt">写作时长：</div>
-        <input type="number" id="duration" placeholder="请输入写作时长，单位/年"/>
+        <div class="intxt">小说简介：</div>
+        <textarea id="details" th:value="${novel.details}"></textarea>
     </div>
     <div class="txtb">
-        <div class="intxt">小说简介：</div>
-        <textarea id="details" placeholder="请输入小说简介">
-            </textarea>
+        <div class="intxt">章节</div>
+        <button th:onclick="toAddChapter([[${novel.id}]])">添加章节</button>
+        <div th:each="chapter:${chapters}">
+            <a style="text-decoration-line: none" th:text="${chapter.cName}" th:href="'/chapter/modify?cid='+${chapter.id}" ></a>
+        </div>
     </div>
-
-    <div class="txtb"><button class="reg-btn" onclick="insertNovel()">添加小说</button></div>
+    <input type="hidden" id="nid" th:value="${novel.id}" />
+    <div class="txtb"><button class="reg-btn" onclick="modifyNovel()">修改</button></div>
 </div>
 
-
-<script type="text/javascript" src="/js/addNovel.js" ></script>
+<script type="text/javascript" src="/js/modifyNovel.js" ></script>
 
 </body>
 </html>

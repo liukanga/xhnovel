@@ -74,18 +74,25 @@
     </update>
 
     <select id="pageQueryAll" resultType="java.lang.Integer">
-        select count(*) from novel
+        select count(*) from novel where
         <if test="keyWords!=null">
-            where key_words like concat('%',#{keyWords},'%')
+            key_words like concat('%',#{keyWords},'%') and
         </if>
+        <if test="status!=null">
+            status = #{status} and
+        </if>
+        n_name is not null
     </select>
 
     <select id="queryNovelByKeyWords" resultMap="novelDOMap">
-        select * from novel
+        select * from novel where
         <if test="keyWords!=null">
-            where key_words like concat('%',#{keyWords},'%')
+            key_words like concat('%',#{keyWords},'%') and
         </if>
-
+        <if test="status!=null">
+            status = #{status} and
+        </if>
+        n_name is not null
         <bind name="currentPage" value="pagination*pageSize"/>
         limit #{currentPage},#{pageSize}
     </select>

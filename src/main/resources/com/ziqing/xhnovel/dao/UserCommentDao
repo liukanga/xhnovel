@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ziqing.xhnovel.dao.UserCommentDao">
+    <resultMap id="ucMap" type="com.ziqing.xhnovel.bean.UserComment">
+        <id property="id" column="id"/>
+        <result property="uid" column="uid" />
+        <result property="cid" column="cid" />
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.ziqing.xhnovel.bean.UserComment" useGeneratedKeys="true" keyProperty="id">
+        insert into user_comment(uid, cid) values (#{uid}, #{cid})
+    </insert>
+
+    <update id="update" parameterType="com.ziqing.xhnovel.bean.UserComment">
+        update user_comment set uid=#{uid},cid=#{cid} where id=#{id}
+    </update>
+
+    <select id="query" resultMap="ucMap">
+        select id, uid, cid from user_comment where
+        <if test="id!=null">
+            id = #{id}
+        </if>
+        <if test="id!=null">
+            uid = #{uid}
+        </if>
+        <if test="id!=null">
+            cid = #{cid}
+        </if>
+    </select>
+
+    <delete id="delete">
+        delete from user_comment where
+        <if test="id!=null">
+            id = #{id}
+        </if>
+        <if test="id!=null">
+            uid = #{uid}
+        </if>
+        <if test="id!=null">
+            cid = #{cid}
+        </if>
+    </delete>
+
+</mapper>

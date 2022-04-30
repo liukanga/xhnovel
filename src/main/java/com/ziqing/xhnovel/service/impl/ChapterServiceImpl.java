@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -33,8 +36,9 @@ public class ChapterServiceImpl implements ChapterService {
 
         ChapterEntity chapterEntity = new ChapterEntity();
         chapterEntity.setId(chapter.getId());
+        chapterDao.updateChapter(chapterEntity);
 
-        return chapterDao.updateChapter(chapterEntity);
+        return 0;
     }
 
     @Override
@@ -45,12 +49,10 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public int insertChapter(Chapter chapter) {
         ChapterEntity chapterEntity = toDO(chapter);
-        int i = chapterDao.addChapter(chapterEntity);
-        if(i>0){
-            chapter.setId(chapterEntity.getId());
-            return i;
-        }
-        return -1;
+        chapterDao.addChapter(chapterEntity);
+        chapter.setId(chapterEntity.getId());
+
+        return 0;
     }
 
     @Override
@@ -120,8 +122,17 @@ public class ChapterServiceImpl implements ChapterService {
             chapter.setContent(chapterEntity.getContent());
             chapter.setWordNum(chapterEntity.getWordNum());
             chapter.setMark(chapterEntity.getMark());
-            chapter.setGmtCreated(chapterEntity.getGmtCreated());
-            chapter.setGmtModified(chapterEntity.getGmtModified());
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (!Objects.isNull(chapterEntity.getGmtCreated())){
+                    chapter.setGmtCreated(sdf.parse(sdf.format(chapterEntity.getGmtCreated())));
+                }
+                if (!Objects.isNull(chapter.getGmtModified())){
+                    chapter.setGmtModified(sdf.parse(sdf.format(chapterEntity.getGmtModified())));
+                }
+            }catch (ParseException e){
+                log.error("******转换日期失败", e);
+            }
         }catch (Exception e){
             log.error("Chapter DO 转为 Model 失败！{}", JSON.toJSON(chapterEntity), e);
         }
@@ -141,8 +152,17 @@ public class ChapterServiceImpl implements ChapterService {
             chapterEntity.setContent(chapter.getContent());
             chapterEntity.setWordNum(chapter.getWordNum());
             chapterEntity.setMark(chapter.getMark());
-            chapterEntity.setGmtCreated(chapter.getGmtCreated());
-            chapterEntity.setGmtModified(chapter.getGmtModified());
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if (!Objects.isNull(chapter.getGmtCreated())){
+                    chapterEntity.setGmtCreated(sdf.parse(sdf.format(chapter.getGmtCreated())));
+                }
+                if (!Objects.isNull(chapter.getGmtModified())){
+                    chapterEntity.setGmtModified(sdf.parse(sdf.format(chapter.getGmtModified())));
+                }
+            }catch (ParseException e){
+                log.error("******转换日期失败", e);
+            }
         }catch (Exception e){
             log.error("Chapter Model 转为 DO 失败！", e);
         }

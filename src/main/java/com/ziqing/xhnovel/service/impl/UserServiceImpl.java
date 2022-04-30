@@ -14,7 +14,12 @@ import org.springframework.util.CollectionUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static io.netty.handler.codec.DateFormatter.format;
 
 @Slf4j
 @Service
@@ -175,8 +180,17 @@ public class UserServiceImpl implements UserService {
             user.setImageUrl(userEntity.getImageUrl());
         }
 
-        user.setGmtCreated(userEntity.getGmtCreated());
-        user.setGmtModified(userEntity.getGmtModified());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(userEntity.getGmtCreated())){
+                user.setGmtCreated(sdf.parse(sdf.format(userEntity.getGmtCreated())));
+            }
+            if (!Objects.isNull(userEntity.getGmtModified())){
+                user.setGmtModified(sdf.parse(sdf.format(userEntity.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
 
         return user;
     }
@@ -212,8 +226,17 @@ public class UserServiceImpl implements UserService {
             userEntity.setImageUrl(user.getImageUrl());
         }
 
-        userEntity.setGmtCreated(user.getGmtCreated());
-        userEntity.setGmtModified(user.getGmtModified());
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!Objects.isNull(user.getGmtCreated())){
+                userEntity.setGmtCreated(sdf.parse(sdf.format(user.getGmtCreated())));
+            }
+            if (!Objects.isNull(user.getGmtModified())){
+                userEntity.setGmtModified(sdf.parse(sdf.format(user.getGmtModified())));
+            }
+        }catch (ParseException e){
+            log.error("******转换日期失败", e);
+        }
 
         return userEntity;
     }
