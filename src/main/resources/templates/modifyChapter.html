@@ -54,7 +54,7 @@
     </div>
     <div class="txtb">
         <div class="intxt">正文内容：</div>
-        <textarea name="content" th:value="${chapter.content}"></textarea>
+        <textarea style="height: 300px" name="content" th:text="${chapter.content}"></textarea>
     </div>
 
     <button type="submit">修改</button>

@@ -65,7 +65,7 @@ public class CommentController {
 
         List<Comment> commentList = commentPaging.getData();
 
-        model.addAttribute("userList", commentList);
+        model.addAttribute("commentList", commentList);
         model.addAttribute("pageObj", commentPaging);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("currentUser", currentUser);
@@ -73,5 +73,14 @@ public class CommentController {
 
         return "commentList";
     }
+
+
+    @GetMapping("/remove")
+    public String removeComment(@RequestParam(value = "id")Long id){
+        commentService.removeComment(id);
+        return "redirect:toCommentList";
+    }
+
+
 
 }

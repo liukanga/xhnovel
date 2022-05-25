@@ -1,5 +1,6 @@
 package com.ziqing.xhnovel.bean;
 
+import com.ziqing.xhnovel.model.Novel;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ public class KafkaMessageEntity {
 
     private String message;
 
-    private List<NovelEntity> data;
+    private List<Novel> data;
 
     private LocalDateTime dateTime;
 

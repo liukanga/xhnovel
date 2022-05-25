@@ -2,7 +2,9 @@ package com.ziqing.xhnovel.service.impl;
 
 
 import com.ziqing.xhnovel.bean.NovelEntity;
+import com.ziqing.xhnovel.bean.UserNovel;
 import com.ziqing.xhnovel.dao.NovelDao;
+import com.ziqing.xhnovel.dao.UserNovelDao;
 import com.ziqing.xhnovel.model.BasePageParam;
 import com.ziqing.xhnovel.model.Novel;
 import com.ziqing.xhnovel.model.Paging;
@@ -11,6 +13,7 @@ import com.ziqing.xhnovel.service.NovelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
@@ -28,6 +31,9 @@ public class NovelServiceImpl implements NovelService {
     private NovelDao novelDao;
     @Autowired
     private ChapterService chapterService;
+
+    @Autowired
+    private UserNovelDao userNovelDao;
 
     @Override
     public List<Novel> queryAllBooks() {
@@ -47,7 +53,7 @@ public class NovelServiceImpl implements NovelService {
 
         NovelEntity novelEntity = novelDao.queryNovelById(nid);
 
-        return toModel(novelEntity);
+        return Objects.isNull(novelEntity) ? null : toModel(novelEntity);
     }
 
     @Override
@@ -100,6 +106,51 @@ public class NovelServiceImpl implements NovelService {
         return new Paging<>(param.getPagination(), param.getPageSize(), totalCount, novelList);
     }
 
+    @Override
+    public List<Novel> loadNovelByUserId(Long uid){
+
+        List<UserNovel> relationList = userNovelDao.queryByUid(uid);
+        List<Novel> novelList = new ArrayList<>();
+        for (UserNovel userNovel : relationList){
+            novelList.add(toModel(novelDao.queryNovelById(userNovel.getNid())));
+        }
+        return novelList;
+    }
+
+    @Override
+    public int insertUserNovel(Long nid, Long uid){
+        UserNovel userNovel = new UserNovel(uid, nid);
+
+        Map<String, Long> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("nid", nid);
+
+        List<UserNovel> query = userNovelDao.query(params);
+
+        if (CollectionUtils.isEmpty(query)){
+            userNovelDao.insert(userNovel);
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean isCollect(Long nid, Long uid) {
+        Map<String, Long> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("nid", nid);
+        List<UserNovel> query = userNovelDao.query(params);
+        return !CollectionUtils.isEmpty(query);
+    }
+
+    @Override
+    public int deleteUserNovel(Long nid, Long uid){
+        Map<String, Long> params = new HashMap<>();
+        params.put("uid", uid);
+        params.put("nid", nid);
+
+        return userNovelDao.delete(params);
+    }
+
     public NovelEntity toDO(Novel novel) {
 
         NovelEntity novelEntity = new NovelEntity();
@@ -145,7 +196,7 @@ public class NovelServiceImpl implements NovelService {
 
         Novel novel = new Novel();
 
-        if (novelEntity.getId() != null) {
+         if (novelEntity.getId() != null) {
             novel.setId(novelEntity.getId());
         }
         novel.setAid(novelEntity.getAid());
@@ -179,4 +230,8 @@ public class NovelServiceImpl implements NovelService {
         return novel;
 
     }
+
+
+
+
 }

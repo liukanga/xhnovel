@@ -24,6 +24,10 @@
         <div class="cNovel" onclick="switchTo(4)">小说列表</div>
         <div class="downLine"></div>
     </div>
+    <!--<div th:unless="${hNo} eq 1">
+        <div class="cNovel" onclick="switchTo(9)">热门小说榜单</div>
+        <div class="downLine"></div>
+    </div>-->
     <div th:if="${hNo} eq 1" >
         <div class="cNovel" onclick="switchTo(5)">评论管理</div>
         <div class="downLine"></div>
@@ -39,6 +43,7 @@
         </div>
         <input type=hidden id="cUserId" th:value="${currentUser.id}" />
         <div th:if="${currentUser.status} eq 3" class="cDetails" onclick="switchTo(7)">我的书架</div>
+        <div th:if="${currentUser.status} eq 3" class="cDetails" onclick="switchTo(10)">推荐小说</div>
         <div th:if="${currentUser.status} eq 2" class="cDetails" onclick="switchTo(7)">我的作品</div>
         <div class="cDetails" onclick="switchTo(6)">个人信息</div>
         <div class="signOut" onclick="switchTo(8)">退出</div>
@@ -50,7 +55,7 @@
         <div class="ttl" th:text="${title}"></div>
         <div class="splitLine"></div>
         <div style="display: flex">
-            <button th:unless="${currentUser} eq 3" onclick="addNovel()" >发布小说</button>
+            <button th:unless="${currentUser.status} eq 3" onclick="addNovel()" >发布小说</button>
             <div style="margin-left: 150px;margin-right: 150px"></div>
             <input type="text" id="keyWords" placeholder="请输入小说名或作者名" />
             <select id="status">
@@ -82,13 +87,10 @@
                 <button th:onclick="modifyNovel([[${novel.id}]])">更新</button>
                 <button th:onclick="removeNovel([[${novel.id}]])">删除</button>
             </div>
-            <div th:if="${page2} eq 3">
-                <button th:onclick="removeNovel([[${novel.id}]])">移出书架</button>
-            </div>
         </div>
     </main>
 
-    <div th:if="${myPage} eq 1" class="num">
+    <div th:unless="${myPage} eq 1" class="num">
         <div th:each="i:${#numbers.sequence(1, pageObj.totalPage)}" class="paging-area">
             <a th:unless="${pageObj.pageNum == (i - 1)}" th:href="'/novel/query?pageNo=' + ${i}" th:text="${i}" ></a>
             <div th:if="${pageObj.pageNum == (i - 1)}" th:text="${i}" ></div>
@@ -101,7 +103,24 @@
         <div th:text="|当前在第 ${pageNo} 页|"></div>
     </div>
 
-
+<div th:if="${status} eq 1" class="dlg2">
+    <div style="display: flex;text-align: center;margin-left: 400px;" >
+        <h2>热门推荐</h2>
+        <div style="margin-left: 430px;"><button style="cursor: pointer;" onclick="closeDiv()">关闭推荐</button></div>
+    </div>
+    <table class="nList">
+        <tbody>
+        <tr th:each="nov:${novls}">
+            <td class="ig">
+                <img th:src="${nov.imgUrl}" th:onclick="toReadChapter([[${nov.id}]])" />
+            </td>
+            <td class="tname" th:text="${nov.nName}"></td>
+            <td class="tstatus" th:text="${nov.status}"></td>
+            <td class="tdescription" th:text="${nov.details}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
     <script type="text/javascript" src="/js/novelList.js" ></script>
 </body>
 </html>

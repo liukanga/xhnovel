@@ -2,6 +2,7 @@ package com.ziqing.xhnovel.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.ziqing.xhnovel.bean.ChapterEntity;
 import com.ziqing.xhnovel.dao.ChapterDao;
+import com.ziqing.xhnovel.dao.NovelChapterDao;
 import com.ziqing.xhnovel.model.BasePageParam;
 import com.ziqing.xhnovel.model.Chapter;
 import com.ziqing.xhnovel.model.Paging;
@@ -13,9 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -23,6 +22,9 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Autowired
     private ChapterDao chapterDao;
+
+    @Autowired
+    private NovelChapterDao novelChapterDao;
 
     @Override
     public Chapter queryChapter(Long id) {
@@ -33,11 +35,7 @@ public class ChapterServiceImpl implements ChapterService {
 
     @Override
     public int updateChapter(Chapter chapter) {
-
-        ChapterEntity chapterEntity = new ChapterEntity();
-        chapterEntity.setId(chapter.getId());
-        chapterDao.updateChapter(chapterEntity);
-
+        chapterDao.updateChapter(toDO(chapter));
         return 0;
     }
 
@@ -108,6 +106,23 @@ public class ChapterServiceImpl implements ChapterService {
         }
 
         return chapters;
+    }
+
+    @Override
+    public int insertNovelChapter(Long chid, Long nid){
+        Map<String,Long> params = new HashMap<>();
+        params.put("chid", chid);
+        params.put("nid", nid);
+
+        novelChapterDao.insert(params);
+
+        return 0;
+    }
+
+    @Override
+    public int removeChapter(Long id) {
+        chapterDao.removeChapter(id);
+        return 0;
     }
 
     private Chapter toModel(ChapterEntity chapterEntity){

@@ -47,7 +47,7 @@ login_btn.addEventListener("click", function () {
                 }
             }else{
                 alert("登录失败,请重新登录！");
-                self.location = "/user/loginPage";
+                self.location = "/loginPage";
             }
 
         })

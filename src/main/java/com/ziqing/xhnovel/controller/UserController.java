@@ -1,6 +1,5 @@
 package com.ziqing.xhnovel.controller;
 
-import com.ziqing.xhnovel.bean.ImageEntity;
 import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.CommentService;
 import com.ziqing.xhnovel.service.NovelService;
@@ -26,21 +25,12 @@ public class UserController {
     private UserService userService;
     @Autowired
     private CommentService commentService;
-
-    @GetMapping("/loginPage")
-    public String login() {
-        return "login";
-    }
-
-    @GetMapping("/reg")
-    public String register() {
-        return "reg";
-    }
+    @Autowired
+    private NovelService novelService;
 
     @PostMapping("/login")
     @ResponseBody
     public Result<User> login(@NonNull @RequestBody User user, HttpServletRequest request) {
-
         Result<User> result = userService.login(user.getId(), user.getPassword(), user.getStatus());
         if (result.isSuccess()) {
             result.setMessage("登录成功！");
@@ -55,17 +45,30 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public Result<User> register(@RequestBody User user, HttpServletRequest request) {
-
         HttpSession session = request.getSession();
         String imageUrl = (String) session.getAttribute("imageUrl");
-
         user.setImageUrl(imageUrl);
         Result<User> res = userService.register(user);
-
         if (res.isSuccess()) {
             res.setMessage("注册成功！");
         }
         return res;
+    }
+
+    @PostMapping("/registerUser")
+    public String registerUser(@RequestParam("username")String username,
+                               @RequestParam("password")String password,
+                               @RequestParam("status")Integer status,
+                               @RequestParam("duration")Integer duration,
+                               @RequestParam("description")String description){
+        User user = new User();
+        user.setName(username);
+        user.setPassword(password);
+        user.setDuration(duration);
+        user.setStatus(status);
+        user.setDetails(description);
+        userService.register(user);
+        return "redirect:/user/toUserList";
     }
 
     @GetMapping("/remove/{aid}")
@@ -84,12 +87,9 @@ public class UserController {
                            @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
                            HttpServletRequest request,
                            Model model) {
-
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        User currentUser = getCurrentUser(request);
         log.info("登录用户为：{}", currentUser.getName());
         log.info("当前用户id：{}", currentUser.getId());
-
         BasePageParam param = new BasePageParam(pageNo - 1, pageSize, null);
         Paging<User> userPaging = null;
         if (StringUtils.hasText(username)) {
@@ -97,15 +97,12 @@ public class UserController {
         } else {
             userPaging = userService.pageQuery(param, null, status);
         }
-
         List<User> userList = userPaging.getData();
-
         model.addAttribute("userList", userList);
         model.addAttribute("pageObj", userPaging);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("hNo", currentUser.getStatus());
-
         return "userList";
     }
 
@@ -113,24 +110,50 @@ public class UserController {
     public String homePage(@RequestParam(value = "uid") Long uid,
                            HttpServletRequest request,
                            Model model) {
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        User currentUser = getCurrentUser(request);
         User user = userService.queryUserById(uid);
         List<Comment> commentList = commentService.loadCommentByUserId(uid);
-
         model.addAttribute("user", user);
         model.addAttribute("novels", user.getNovels());
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("hNo", currentUser.getStatus());
         model.addAttribute("commentList", commentList);
         model.addAttribute("cmt", 1);
-
         if (currentUser.getId().equals(user.getId()) && currentUser.getStatus()!=2 ){
             model.addAttribute("cmt", 2);
         }
-
-
         return "homePage";
+    }
+
+    @GetMapping("/bookshelf")
+    public String toBookshelf(HttpServletRequest request, Model model){
+        User currentUser = getCurrentUser(request);
+        List<Novel> novelList = novelService.loadNovelByUserId(currentUser.getId());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("size", novelList.size());
+        model.addAttribute("novelList", novelList);
+        return "myBookShelf";
+    }
+
+    @GetMapping("/addBookshelf/{uid}/{nid}")
+    public String addBookshelf(@PathVariable("uid")Long uid,
+                               @PathVariable("nid")Long nid,
+                               HttpServletRequest request, Model model){
+        novelService.insertUserNovel(nid, uid);
+        return "redirect:/novel/toChapterList?nid="+nid;
+
+    }
+
+    @GetMapping("/removeBookshelf/{uid}/{nid}")
+    public String removeBookshelf(@PathVariable("uid")Long uid,
+                               @PathVariable("nid")Long nid){
+        novelService.deleteUserNovel(nid, uid);
+        return "redirect:/user/bookshelf";
+    }
+
+    public static User getCurrentUser(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        return  (User) session.getAttribute("user");
     }
 
 }

@@ -16,10 +16,9 @@ function switchTo(value) {
         var uid = document.getElementById("cUserId").value;
         window.location = "/user/toHomePage?uid="+uid;
     }else if(value===7){
-        var aid = document.getElementById("cUserId").value;
-        window.location = "/novel/toNovelList/"+aid
+        window.location = "/user/bookshelf";
     }else{
-        window.location = "/user/loginPage"
+        window.location = "/exit";
     }
 }
 const de = document.querySelector(".cDetails");
@@ -36,12 +35,14 @@ currentUser.addEventListener("click", function () {
 
 function queryNovel() {
 
-    const keyWords = document.getElementById("keyWords").textContent;
+    const keyWords = document.getElementById("keyWords").value;
     const status = document.getElementById("status").value;
 
     if (status === '0'){
+        alert("查找所有”"+ keyWords +"”")
         window.location = "/novel/query?keyWords="+keyWords;
     }else{
+        alert("查找所有”"+ status +"”")
         window.location = "/novel/query?keyWords="+keyWords+"&&status="+status;
     }
 
@@ -59,6 +60,12 @@ function modifyNovel(id) {
 }
 
 function removeNovel(id) {
+    alert("删除小说成功！")
     var uid = document.getElementById("cUserId").value;
-    window.location = "";
+    window.location = "/novel/remove?nid="+id+"&uid="+uid;
+}
+
+function closeDiv() {
+    const dlg = document.querySelector(".dlg2");
+    dlg.style.display = "none";
 }

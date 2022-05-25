@@ -11,10 +11,9 @@ function switchTo(value) {
         var uid = document.getElementById("cUserId").value;
         window.location = "/user/toHomePage?uid="+uid;
     }else if(value===7){
-        var aid = document.getElementById("cUserId").value;
-        window.location = "/novel/toNovelList/"+aid
+        window.location = "/user/bookshelf";
     }else{
-        window.location = "/user/loginPage"
+        window.location = "/exit";
     }
 }
 
@@ -22,14 +21,13 @@ function switchTo(value) {
 function modifyNovel() {
 
     const name = document.getElementById("name").value;
-    const details = document.getElementById("details").value;
     const status = document.getElementById("status").value;
 
     const nid = document.getElementById("nid").value;
 
     var novel = {
+        "id": nid,
         "nName": name,
-        "details": details,
         "status": status
     }
 
@@ -51,7 +49,7 @@ function modifyNovel() {
                 alert("更新小说《"+name+"》成功");
                 window.location = "/novel/query";
             }else {
-                alert("更新小说《"+name+"》失败, 请重新尝试！");
+                alert("更新小说《"+name+"》失败, 请重新尝试！"); 
                 window.location = "/novel/toModifyNovel?nid="+nid;
             }
         })
@@ -60,6 +58,13 @@ function modifyNovel() {
 
 function toAddChapter(id) {
 
-    window.location="/chapter//toModifyChapter?page=2";
+    window.location="/chapter/toModifyChapter?page=2";
 
+}
+
+function removeChapter(cid) {
+
+    const nid = document.getElementById("nid").value;
+
+    window.location = "/chapter/removeChapter?cid="+cid+"&nid="+nid;
 }

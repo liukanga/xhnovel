@@ -1,5 +1,7 @@
 package com.ziqing.xhnovel.service.impl;
 import com.alibaba.fastjson.JSON;
+import com.ziqing.xhnovel.bean.KafkaMessageEntity;
+import com.ziqing.xhnovel.bean.NovelEntity;
 import com.ziqing.xhnovel.bean.UserEntity;
 import com.ziqing.xhnovel.dao.UserDao;
 import com.ziqing.xhnovel.exception.XHNDBException;
@@ -9,6 +11,7 @@ import com.ziqing.xhnovel.service.UserService;
 import com.ziqing.xhnovel.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -17,6 +20,7 @@ import org.springframework.util.StringUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static io.netty.handler.codec.DateFormatter.format;
@@ -154,6 +158,9 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
 
+        if (Objects.isNull(userEntity)){
+            return null;
+        }
         if(userEntity.getId()!=null){
             user.setId(userEntity.getId());
         }
@@ -168,12 +175,25 @@ public class UserServiceImpl implements UserService {
         String novelIds = userEntity.getNovelIds();
         List<Long> nIds = JSON.parseObject(novelIds, Constants.TRE_Long);
         List<Novel> novels = new ArrayList<>();
+
+        Long rId = null;
+
         if(!CollectionUtils.isEmpty(nIds)){
             for(Long id : nIds){
                 Novel novel = novelService.queryNovelById(id);
-                novels.add(novel);
+                if (!Objects.isNull(novel)){
+                    novels.add(novel);
+                }else {
+                    rId = id;
+                }
             }
         }
+        if (rId != null){
+            nIds.remove(rId);
+            userEntity.setNovelIds(JSON.toJSONString(nIds));
+            userDao.updateUser(userEntity);
+        }
+
         user.setNovels(novels);
 
         if (StringUtils.hasText(userEntity.getImageUrl())){

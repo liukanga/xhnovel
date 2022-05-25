@@ -98,3 +98,51 @@ main{
 .paging-area>div:hover{
     cursor: pointer;
 }
+.dlg{
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    margin-top: -820px;
+    margin-left: 500px;
+    border: 1px solid whitesmoke;
+    border-radius: 10px;
+    background-color: rgba(244,180,120,1);
+    display: none;
+}
+#fm>div>select{
+    width: 180px;
+    height: 30px;
+}
+#fm>div>input{
+    width: 180px;
+    height: 30px;
+    background-color: rgba(244,180,120,1);;
+    border: 1px solid rgba(244,180,120,1);;
+    border-bottom: 2px solid whitesmoke;
+}
+#fm>div{
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+.sbt{
+    display: flex;
+    justify-content: space-between;
+}
+#fm>div>button{
+    width: 80px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #999999;
+    border: 2px solid seashell;
+    cursor: pointer;
+}
+.closeDiv{
+    width: 80px;
+    height: 30px;
+    background-color: #999999;
+    border: 2px solid seashell;
+    border-radius: 5px;
+    cursor: pointer;
+    line-height: 30px;
+    text-align: center;
+}

@@ -28,29 +28,29 @@
 
     <select id="pageQueryAll" resultType="java.lang.Integer">
         select count(*) from comment
-        <where>
-            <if test="userId!=null">
-                user_id = #{userId}
-            </if>
-            <if test="commentatorId!=null">
-                commentator_id = #{commentatorId}
-            </if>
-        </where>
+        <if test="userId!=null">
+            where user_id = #{userId}
+        </if>
+        <if test="commentatorId!=null">
+            where commentator_id = #{commentatorId}
+        </if>
     </select>
 
     <select id="pageQuery" resultMap="commentDOMap">
         select * from comment
-        <where>
-            <if test="userId!=null">
-                user_id = #{userId}
-            </if>
-            <if test="commentatorId!=null">
-                commentator_id = #{commentatorId}
-            </if>
-        </where>
+        <if test="userId!=null">
+            where user_id = #{userId}
+        </if>
+        <if test="commentatorId!=null">
+            where commentator_id = #{commentatorId}
+        </if>
         <bind name="currentPage" value="pagination*pageSize"/>
         limit #{currentPage},#{pageSize}
     </select>
+
+    <delete id="removeComment">
+        delete from comment where id=#{id}
+    </delete>
 
 
 </mapper>

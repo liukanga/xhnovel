@@ -12,9 +12,9 @@ function switchTo(value) {
         window.location = "/user/toHomePage?uid="+uid;
     }else if(value===7){
         var aid = document.getElementById("cUserId").value;
-        window.location = "/novel/toNovelList/"+aid
+        window.location = "/user/bookshelf";
     }else{
-        window.location = "/user/loginPage"
+        window.location = "/exit";
     }
 }
 const de = document.querySelector(".cDetails");
@@ -65,6 +65,8 @@ function sendComment() {
             }
             window.location = "/user/toHomePage?uid="+c2;
         })
+}
 
-
+function toModifyNovel(nid) {
+    window.location = "/novel/toModifyNovel?nid="+nid;
 }

@@ -28,4 +28,7 @@ public interface ChapterDao {
 
     List<ChapterEntity> queryByName(String mark);
 
+    List<Long> queryAllChaptersId();
+
+    int removeChapter(Long id);
 }

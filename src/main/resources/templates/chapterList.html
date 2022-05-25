@@ -75,7 +75,7 @@
                 <li title="5分">★</li>
             </ul>
         </div>
-        <button th:if="${isCollect} eq 0" th:value="${novel.id}" onclick="addNovelToBookshelf(this.value)">加入书架</button>
+        <button th:if="${isCollect} eq 0"  th:onclick="addBookshelf([[${currentUser.id}]], [[${novel.id}]])">加入书架</button>
         <div  th:if="${isCollect} eq 1" >已加入书架</div>
     </nav>
     <main>

@@ -76,11 +76,13 @@
              </div>
              <ul th:each="novel:${novels}">
                  <img th:src="${novel.imgUrl}" />
-                 <li th:text="${novel.nName}"></li>
+                 <li th:text="${novel.nName}" th:onclick="toModifyNovel([[${novel.id}]])"></li>
                  <div th:text="${novel.details}"></div>
+                 <div th:if="${currentUser.id} eq ${user.id}">
+                     <button>删除</button>
+                     <button>修改</button>
+                 </div>
              </ul>
-
-             <button th:if="${user.id} eq ${currentUser.id}" th:onclick="toModifyUser([[${currentUser.id}]])">编辑个人信息</button>
          </main>
 
          <div th:if="${cmt} eq 1" style="margin-top: 400px">

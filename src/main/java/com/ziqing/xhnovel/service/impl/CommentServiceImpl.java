@@ -2,7 +2,9 @@ package com.ziqing.xhnovel.service.impl;
 
 import com.ziqing.xhnovel.bean.CommentEntity;
 import com.ziqing.xhnovel.bean.NovelEntity;
+import com.ziqing.xhnovel.bean.UserComment;
 import com.ziqing.xhnovel.dao.CommentDao;
+import com.ziqing.xhnovel.dao.UserCommentDao;
 import com.ziqing.xhnovel.exception.XHNDBException;
 import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.CommentService;
@@ -26,6 +28,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserCommentDao userCommentDao;
 
     @Override
     @Transactional(rollbackFor = {XHNDBException.class})
@@ -72,8 +77,21 @@ public class CommentServiceImpl implements CommentService {
         if (commentEntity.getId()!=null){
             comment.setId(commentEntity.getId());
         }
-        comment.setUser(userService.queryUserById(commentEntity.getUserId()));
-        comment.setCommentator(userService.queryUserById(commentEntity.getCommentatorId()));
+        User user = userService.queryUserById(commentEntity.getUserId());
+        User commentator = userService.queryUserById(commentEntity.getCommentatorId());
+
+        if (user!=null){
+            comment.setUser(user);
+        }else {
+            commentDao.removeComment(comment.getId());
+        }
+
+        if (commentator!=null){
+            comment.setCommentator(commentator);
+        }else {
+            commentDao.removeComment(comment.getId());
+        }
+
         comment.setContent(commentEntity.getContent());
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

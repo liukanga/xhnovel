@@ -18,29 +18,34 @@
     </update>
 
     <select id="query" resultMap="ncMap">
-        select id, nid, chid from novel_chapter where
-        <if test="id!=null">
-            id = #{id}
-        </if>
-        <if test="id!=null">
-            nid = #{nid}
-        </if>
-        <if test="id!=null">
-            chid = #{chid}
-        </if>
+        select id, nid, chid from novel_chapter
+        <where>
+            <if test="id!=null">
+                id = #{id}
+            </if>
+            <if test="nid!=null">
+                nid = #{nid}
+            </if>
+            <if test="chid!=null">
+                chid = #{chid}
+            </if>
+        </where>
+
     </select>
 
     <delete id="delete">
-        delete from novel_chapter where
-        <if test="id!=null">
-            id = #{id}
-        </if>
-        <if test="id!=null">
-            nid = #{nid}
-        </if>
-        <if test="id!=null">
-            chid = #{chid}
-        </if>
+        delete from novel_chapter
+        <where>
+            <if test="id!=null">
+                id = #{id}
+            </if>
+            <if test="nid!=null">
+                nid = #{nid}
+            </if>
+            <if test="chid!=null">
+                chid = #{chid}
+            </if>
+        </where>
     </delete>
 
 </mapper>

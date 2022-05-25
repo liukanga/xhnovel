@@ -11,4 +11,10 @@ public class UserNovel {
 
     private Long nid;
 
+    public UserNovel(Long uid, Long nid) {
+        this.uid = uid;
+        this.nid = nid;
+    }
+
+    public UserNovel(){}
 }

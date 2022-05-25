@@ -1,6 +1,4 @@
-var reg_btn = document.querySelector(".reg-btn");
-
-reg_btn.addEventListener("click", function (){
+function regUser(page) {
 
     var name = document.getElementById("name").value;
     var pwd = document.getElementById("password").value;
@@ -10,15 +8,15 @@ reg_btn.addEventListener("click", function (){
 
     if(name===''){
         alert("昵称不能为空！");
-        self.location = "/user/reg";
+        self.location = "/reg";
     }
     if(pwd===''){
         alert("密码不能为空！");
-        self.location = "/user/reg";
+        self.location = "/reg";
     }
     if(status==='0'){
         alert("请选择身份！");
-        self.location = "/user/reg";
+        self.location = "/reg";
     }
 
     var user = {
@@ -46,24 +44,32 @@ reg_btn.addEventListener("click", function (){
             return response.json();
         })
         .then(function (result) {
-            if(result.isSuccess == true || result.success == true){
-                alert("注册成功！您的账号为："+result.data.id);
-                window.location = "/user/loginPage";
+            if (page===1){
+                if(result.isSuccess == true || result.success == true){
+                    alert("注册成功！您的账号为："+result.data.id);
+                    window.location = "/loginPage";
+                }else{
+                    alert("注册失败,请重新尝试！");
+                    self.location = "/reg";
+                }
             }else{
-                alert("注册失败,请重新尝试！");
-                self.location = "/user/reg";
+                if(result.isSuccess == true || result.success == true){
+                    alert("添加用户成功！用户账号为："+result.data.id);
+                    window.location = "/user/toUserList";
+                }else{
+                    alert("添加用户失败,请重新尝试！");
+                    self.location = "/reg?page=2";
+                }
             }
+
         })
-
-
-});
+};
 
 function showImg(){
     var file = document.getElementById('img_file').files[0];
     var re = new FileReader();
     re.readAsDataURL(file);
     re.onload = function(re){
-        alert("图片地址：" + JSON.stringify(file))
         const formData = new FormData();
         formData.append("file", file);
         fetch("/image", {
@@ -71,14 +77,12 @@ function showImg(){
             body: formData
         })
             .then(function (response) {
-                alert("response1: " + JSON.stringify(response))
                 return response.json();
             })
             .then(function (result){
-                alert("response2: " + JSON.stringify(result))
                 if(result.success === false || result.isSuccess===false){
                     alert("上传头像失败，请重新上传");
-                    window.location = "http://localhost:8026/user/reg";
+                    window.location = "http://localhost:8026/reg";
                 }
             })
         document.getElementById('img_id').src=re.target.result;

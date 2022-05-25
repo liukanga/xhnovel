@@ -23,4 +23,11 @@ public interface NovelService {
 
     Paging<Novel> queryNovelByKeyWords(BasePageParam param, String keyWords, String status);
 
+    List<Novel> loadNovelByUserId(Long uid);
+
+    int deleteUserNovel(Long nid, Long uid);
+
+    int insertUserNovel(Long nid, Long uid);
+
+    boolean isCollect(Long nid, Long uid);
 }

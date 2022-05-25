@@ -63,7 +63,7 @@
             <td th:text="${comment.content}"></td>
             <input id="cmtId" type="hidden"  />
             <td>
-                <button th:if="${hNo} eq 1" th:value="${comment.id}" onclick="removeComment(this.value)">删除</button>
+                <button th:if="${hNo} eq 1" th:onclick="removeComment([[${comment.id}]])">删除</button>
             </td>
         </tr>
     </table>

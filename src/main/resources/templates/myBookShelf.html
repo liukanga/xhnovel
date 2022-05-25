@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8">
+		<title>我的书架</title>
+		<link rel="stylesheet" href="/css/myBookShelf.css" />
+		<script type="text/javascript" src="/js/myBookShelf.js" ></script>
+	</head>
+	<body>
+		
+		<div class="hd">
+			<div class="myDetail">
+			<img th:src="${currentUser.imageUrl}" />
+			    <div>
+				<div th:text="${currentUser.name}"></div>
+					<div>
+						<span title="等级说明：&#13;青铜级（阅读或者写作时长<=1年）&#10;白银级（阅读或者写作时长1~3年）&#10;黄金级（阅读或者写作时长3~5年）&#10;铂金级（阅读或者写作时长5~8年）&#10;钻石级（阅读或者写作时长8~10年）&#10;大师级（阅读或者写作时长>=10年）">等级：</span>
+						<span class="duration" th:if="${currentUser.duration}<1">青铜级</span>
+						<span class="duration" th:if="${currentUser.duration}>=1 and ${currentUser.duration}<3">白银级</span>
+						<span class="duration" th:if="${currentUser.duration}>=3 and ${currentUser.duration}<5">黄金级</span>
+						<span class="duration" th:if="${currentUser.duration}>=5 and ${currentUser.duration}<8">铂金级</span>
+						<span class="duration" th:if="${currentUser.duration}>=8 and ${currentUser.duration}<10">钻石级</span>
+						<span class="duration" th:if="${currentUser.duration}>=10">大师级</span>
+						<span th:if="${currentUser.status} eq 2"> 作者</span>
+						<span th:if="${currentUser.status} eq 3"> 读者</span>
+					</div>
+			</div>
+
+		    </div>
+			<button class="backnovel" onclick="toNovelList()">返回小说列表</button>
+			<div th:if="${currentUser.status} eq 3" class="mys">
+				我的书架
+			</div>
+			<div th:if="${currentUser.status} eq 2" class="mys">
+				我的作品
+			</div>
+		</div>
+		<div th:if="${size} eq 0">暂无小说</div>
+		<table th:unless="${size} eq 0">
+			<thead>
+				<tr class="tb">
+					<td></td>
+					<td style="font-weight: 500;">小说名</td>
+					<td style="font-weight: 500;">状态</td>
+					<td style="font-weight: 500;">更新时间</td>
+					<td style="font-weight: 500;">操作</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="tb" th:each="novel : ${novelList}">
+					<td id="image"><img th:src=${novel.imgUrl} /></td>
+					<td id="nname" th:text="${novel.nName}" th:onclick="toNovel([[${novel.id}]])"></td>
+					<td id="status" th:text="${novel.status}"></td>
+					<td id="mdate" th:text="${#dates.format(novel.gmtModified, 'yyyy-MM-dd')}"></td>
+					<td><button th:onclick="removeNovel([[${novel.id}]], [[${currentUser.id}]])">删除</button></td>
+				</tr>
+			</tbody>
+			
+			
+		</table>
+		
+	</body>
+</html>

@@ -124,7 +124,7 @@ public class ChapterController {
         HttpSession session = request.getSession();
         session.setAttribute("chapter", chapter);
 
-        return "redirect:/chapter/modifyChapter?page=2";
+        return "redirect:/chapter/toModifyChapter?page=1";
 
     }
 
@@ -138,8 +138,7 @@ public class ChapterController {
         model.addAttribute("hNo", currentUser.getStatus());
         model.addAttribute("currentUser", currentUser);
 
-        if (page == 2){
-
+        if (page == 1){
             Chapter chapter = (Chapter) session.getAttribute("chapter");
             model.addAttribute("chapter", chapter);
         }
@@ -174,17 +173,18 @@ public class ChapterController {
 
         HttpSession session = request.getSession();
         Long nid = (Long) session.getAttribute("novelId");
-
         Novel novel = novelService.queryNovelById(nid);
-
         List<Chapter> chapters = novel.getChapters();
-
+        if(CollectionUtils.isEmpty(chapters)){
+            chapters = new ArrayList<>();
+        }
         Chapter chapter = new Chapter();
         chapter.setCName(name);
         chapter.setContent(content);
         chapter.setNid(novel.getId());
         StringBuilder sb = new StringBuilder();
         sb.append(novel.getId());
+        sb.append("-");
         sb.append(chapters.size()+1);
         chapter.setMark(sb.toString());
         chapter.setWordNum(content.getBytes(StandardCharsets.UTF_8).length);
@@ -202,6 +202,16 @@ public class ChapterController {
         }
 
         return "modifyChapter";
+    }
+
+    @GetMapping("/removeChapter")
+    public String removeChapter(@RequestParam("cid") Long cid,
+                                @RequestParam("nid") Long nid){
+
+        chapterService.removeChapter(cid);
+
+        return "redirect:/novel/toModifyNovel?nid="+nid;
+
     }
 
 }

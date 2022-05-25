@@ -25,4 +25,9 @@ public interface ChapterService {
     List<Chapter> queryByNid(Long nid);
 
     List<Chapter> queryByCName(String cName);
+
+    int insertNovelChapter(Long chid, Long nid);
+
+    int removeChapter(Long id);
+
 }

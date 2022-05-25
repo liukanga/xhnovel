@@ -15,6 +15,7 @@ public interface UserNovelDao {
 
     int update(UserNovel userNovel);
 
-    List<UserNovel> query(Map<String, Long> paramMap);
+    List<UserNovel> queryByUid(Long uid);
 
+    List<UserNovel> query(Map<String, Long> paramMap);
 }

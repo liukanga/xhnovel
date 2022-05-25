@@ -18,29 +18,15 @@
     </update>
 
     <select id="query" resultMap="unMap">
-        select id, uid, nid from user_novel where
-        <if test="id!=null">
-            id = #{id}
-        </if>
-        <if test="id!=null">
-            uid = #{uid}
-        </if>
-        <if test="id!=null">
-            nid = #{nid}
-        </if>
+        select id, uid, nid from user_novel where uid = #{uid} and nid = #{nid}
+    </select>
+
+    <select id="queryByUid" resultMap="unMap">
+        select id, uid, nid from user_novel where uid = #{uid}
     </select>
 
     <delete id="delete">
-        delete from user_novel where
-        <if test="id!=null">
-            id = #{id}
-        </if>
-        <if test="id!=null">
-            uid = #{uid}
-        </if>
-        <if test="id!=null">
-            nid = #{nid}
-        </if>
+        delete from user_novel where nid=#{nid} and uid=#{uid}
     </delete>
 
 </mapper>

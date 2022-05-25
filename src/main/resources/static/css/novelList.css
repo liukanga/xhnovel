@@ -53,7 +53,7 @@ header>div:hover{
     background-color: sandybrown;
 }
 main{
-    width: 800px;
+    width: 1200px;
     margin: 0 auto;
     padding-top: 50px;
 }
@@ -61,6 +61,7 @@ main{
     list-style: none;
     border: 2px solid black;
     display: flex;
+    width: 1100px;
     justify-content: space-between;
     align-items: center;
 }
@@ -108,4 +109,34 @@ main{
 }
 .paging-area>div:hover{
     cursor: pointer;
+}
+.dlg2{
+    position: absolute;
+    width: 1000px;
+    height: 666px;
+    margin-top: -1280px;
+    margin-left: 300px;
+    border: 1px solid whitesmoke;
+    border-radius: 10px;
+    background-color: #e7bd75;
+    font-size: 16px;
+}
+.ig>img{
+    width: 80px;
+    height: 120px;
+    margin-top: -20px
+}
+.tname{
+    width: 80px;
+}
+.tstatus{
+    width: 50px;
+}
+.tdescription{
+    width: 700px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
 }

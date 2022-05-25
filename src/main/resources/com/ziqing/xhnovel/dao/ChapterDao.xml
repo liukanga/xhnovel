@@ -33,9 +33,6 @@
              <if test="mark!=null">
                  mark=#{mark},
              </if>
-             <if test="wordnum!=null">
-                 word_num=#{wordNum},
-             </if>
 
              gmt_modified=now()
          </set>
@@ -71,6 +68,10 @@
     <select id="queryByName" parameterType="java.lang.String" resultMap="chapterDOMap">
         select * from chapter where c_name=#{cName}
     </select>
+
+    <delete id="removeChapter">
+        delete from chapter where cid=#{id}
+    </delete>
 
 
 

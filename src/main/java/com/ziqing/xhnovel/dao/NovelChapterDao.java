@@ -9,7 +9,7 @@ import java.util.Map;
 @Mapper
 public interface NovelChapterDao {
 
-    Long insert(NovelChapter novelChapter);
+    Long insert(Map<String, Long> paramMap);
 
     int delete(Map<String, Long> paramMap);
 

@@ -1,0 +1,65 @@
+body{
+	background-image: url(../images/login-bg.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	font-weight: 500;
+	font-family: 华文楷体;
+}
+.hd{
+	display: flex;
+}
+.myDetail{
+	display: flex;
+	width: 300px;
+	height: 80px;
+	border: 2px dashed black;
+}
+.myDetail>img{
+	width: 80px;
+	height: 80px;
+	margin-right: 50px;
+}
+.myDetail>div>div{
+	margin-top: 20px;
+}
+
+.mys{
+	margin-left: 50px;
+	padding-top: 50px;
+	width: 800px;
+	height: 80px;
+	text-align: center;
+	font-size: 30px;
+}
+
+table{
+	width: 800px;
+	margin-left: 380px;
+	font-size: 20px;
+	font-family: 华文楷体;
+	text-align: center;
+	align-items: center;
+}
+
+#nname:hover{
+	cursor: pointer;
+	background-color: blanchedalmond;
+}
+
+.tb>td>img{
+	width: 80px;
+	height: 120px;
+}
+.tb>td>button{
+	width: 60px;
+	height: 30px;
+}
+.backnovel{
+	position: absolute;
+	width: 150px;
+	height: 35px;
+	float: right;
+	margin-top: 20px;
+	margin-left: 1000px;
+}

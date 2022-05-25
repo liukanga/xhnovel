@@ -12,8 +12,9 @@ function switchTo(value) {
         window.location = "/user/toHomePage?uid="+uid;
     }else if(value===7){
         var aid = document.getElementById("cUserId").value;
-        window.location = "/novel/toNovelList/"+aid
+        window.location = "/user/bookshelf";
     }else{
-        window.location = "/user/loginPage"
+        window.location = "/exit";
     }
 }
+
