@@ -1,6 +1,5 @@
 package com.ziqing.xhnovel.controller;
 
-import com.ziqing.xhnovel.exception.XHNException;
 import com.ziqing.xhnovel.model.*;
 import com.ziqing.xhnovel.service.ChapterService;
 import com.ziqing.xhnovel.service.NovelService;
@@ -9,14 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequestMapping("/novel")
@@ -72,6 +72,19 @@ public class NovelController {
         }
         model.addAttribute("isLogin", isLogin);
         return "readePage";
+    }
+
+
+    private String convertStringToHtml(String text){
+
+        String[] texts = text.split("  ");
+        StringBuilder sb = new StringBuilder();
+        for (String s : texts){
+
+
+        }
+
+        return null;
     }
 
     @GetMapping("/toChapterList")

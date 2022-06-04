@@ -1,3 +1,21 @@
+window.onload = function () {
+    var content = document.getElementById("content");
+    var HTMLstr = '';
+    fetch("/uiuitest",{
+            method: "GET"
+        }
+    )
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            var list = result.data;
+            for(var i=0;i<list.length;i++){
+                HTMLstr += '<p style="text-indent:2em;">' + list[i] + '</p>';
+            }
+            content.innerHTML = HTMLstr;
+        })
+}
 //下一章
 var nextBtn = document.getElementById("nextChapter");
 nextBtn.addEventListener("click",function () {
