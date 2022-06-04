@@ -4,7 +4,6 @@ package com.ziqing.xhnovel.controller;
 import com.alibaba.fastjson.JSON;
 import com.ziqing.xhnovel.bean.ImageEntity;
 import com.ziqing.xhnovel.bean.KafkaMessageEntity;
-import com.ziqing.xhnovel.model.Chapter;
 import com.ziqing.xhnovel.model.Novel;
 import com.ziqing.xhnovel.model.Result;
 import com.ziqing.xhnovel.model.User;
@@ -16,15 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Controller
 @Slf4j
